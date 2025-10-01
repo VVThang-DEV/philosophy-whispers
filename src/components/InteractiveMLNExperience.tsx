@@ -26,9 +26,6 @@ const InteractiveMLNExperience = () => {
           <div className="inline-block mb-4 sm:mb-6">
             <Brain className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 text-[hsl(270,60%,70%)] mx-auto mb-3 sm:mb-4 animate-pulse" />
           </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-[hsl(40,20%,95%)] mb-3 sm:mb-4 bg-gradient-to-r from-[hsl(270,60%,75%)] via-[hsl(220,70%,70%)] to-[hsl(190,80%,75%)] bg-clip-text text-transparent">
-            Trải Nghiệm Duy Vật Lịch Sử
-          </h1>
           <p className="text-base sm:text-lg md:text-xl text-[hsl(40,20%,95%)]/70 max-w-3xl mx-auto leading-relaxed">
             Khám phá mối quan hệ giữa{" "}
             <span className="text-[hsl(270,60%,75%)] font-semibold">
@@ -214,7 +211,7 @@ const InteractiveMLNExperience = () => {
             <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-[hsl(270,60%,70%)] flex-shrink-0 mt-0.5 sm:mt-1" />
             <div>
               <h3 className="text-base sm:text-lg font-bold text-[hsl(270,60%,75%)] mb-1.5 sm:mb-2">
-                Cả hai đều giải đáp đầy đủ assignment!
+                Cả hai đều cung cấp kiến thức đầy đủ!
               </h3>
               <p className="text-xs sm:text-sm text-[hsl(40,20%,95%)]/70 leading-relaxed">
                 Dù chọn mode nào, bạn cũng sẽ hiểu rõ về mối quan hệ giữa{" "}

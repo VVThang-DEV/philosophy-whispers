@@ -241,9 +241,9 @@ export const philosophers: Philosopher[] = [
     era: "1905-1980",
     school: "Chủ nghĩa hiện sinh",
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Jean_Paul_Sartre_1965.jpg/120px-Jean_Paul_Sartre_1965.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/e/e9/Jean_Paul_Sartre_1965.jpg",
     avatar:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Jean_Paul_Sartre_1965.jpg/120px-Jean_Paul_Sartre_1965.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/e/e9/Jean_Paul_Sartre_1965.jpg",
     description:
       "Triết gia, nhà văn và nhà hoạt động chính trị người Pháp, một trong những người đại diện chủ yếu của chủ nghĩa hiện sinh. Ông nhấn mạnh tự do, trách nhiệm và sự lựa chọn của con người.",
     keyIdeas: [

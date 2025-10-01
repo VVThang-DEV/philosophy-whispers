@@ -1,23 +1,55 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Philosophy Portal - Explore Eternal Questions</title>
-    <meta name="description" content="Dive into timeless philosophical wisdom, converse with great minds, and explore the depths of human consciousness through interactive AI-powered dialogues." />
+    <meta
+      name="description"
+      content="Dive into timeless philosophical wisdom, converse with great minds, and explore the depths of human consciousness through interactive AI-powered dialogues."
+    />
     <meta name="author" content="Philosophy Portal" />
 
-    <meta property="og:title" content="Philosophy Portal - Explore Eternal Questions" />
-    <meta property="og:description" content="Interactive philosophy platform featuring AI-powered conversations with historical philosophers and deep analysis of social consciousness." />
+    <meta
+      property="og:title"
+      content="Philosophy Portal - Explore Eternal Questions"
+    />
+    <meta
+      property="og:description"
+      content="Interactive philosophy platform featuring AI-powered conversations with historical philosophers and deep analysis of social consciousness."
+    />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta
+      property="og:image"
+      content="https://lovable.dev/opengraph-image-p98pqg.png"
+    />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta
+      name="twitter:image"
+      content="https://lovable.dev/opengraph-image-p98pqg.png"
+    />
   </head>
 
   <body>
+    <script>
+      // Disable browser scroll restoration
+      if ("scrollRestoration" in history) {
+        history.scrollRestoration = "manual";
+      }
+
+      // Force scroll to top on page load/refresh with smooth animation
+      window.addEventListener("load", function () {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+      // Also try immediately to override browser scroll restoration
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      // And after a short delay to ensure it sticks
+      setTimeout(function () {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }, 10);
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

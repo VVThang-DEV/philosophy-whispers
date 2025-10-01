@@ -5,9 +5,21 @@ import InteractiveMLNExperience from "@/components/InteractiveMLNExperience";
 import { philosophers } from "@/data/philosophers";
 import type { Philosopher } from "@/data/philosophers";
 import { useNavigate } from "react-router-dom";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const Index = () => {
   const navigate = useNavigate();
+
+  // Scroll animation hooks for different sections
+  const sphereGalleryAnim = useScrollAnimation(0.2);
+  const philosophyShowcaseAnim = useScrollAnimation(0.2);
+  const interactiveExperienceAnim = useScrollAnimation(0.2);
+
+  // Individual element animations
+  const sphereTitleAnim = useScrollAnimation(0.3);
+  const sphereContentAnim = useScrollAnimation(0.3);
+  const philosophyTitleAnim = useScrollAnimation(0.3);
+  const interactiveTitleAnim = useScrollAnimation(0.3);
 
   const handlePhilosopherSelect = (philosopher: Philosopher) => {
     navigate(`/chat?id=${philosopher.id}`);
@@ -19,7 +31,14 @@ const Index = () => {
       <HeroNew />
 
       {/* 3D Sphere Gallery Section with smooth transition */}
-      <section className="min-h-screen py-24 relative bg-gradient-to-b from-[hsl(240,40%,10%)] via-[hsl(240,45%,6%)] to-[hsl(240,40%,8%)]">
+      <section
+        ref={sphereGalleryAnim.ref}
+        className={`min-h-screen py-24 relative bg-gradient-to-b from-[hsl(240,40%,10%)] via-[hsl(240,45%,6%)] to-[hsl(240,40%,8%)] transition-all duration-1000 ${
+          sphereGalleryAnim.isVisible
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-8"
+        }`}
+      >
         {/* Nebula background effects */}
         <div className="absolute inset-0 overflow-hidden opacity-30">
           <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-[hsl(270,60%,50%)] rounded-full blur-[100px]" />
@@ -29,7 +48,14 @@ const Index = () => {
         {/* Top gradient overlay for seamless transition */}
         <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-[hsl(240,40%,10%)] to-transparent pointer-events-none z-10" />
 
-        <div className="container mx-auto text-center mb-16 px-4 relative z-20 fade-in-up">
+        <div
+          ref={sphereTitleAnim.ref}
+          className={`container mx-auto text-center mb-16 px-4 relative z-20 transition-all duration-1000 delay-200 ${
+            sphereTitleAnim.isVisible
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-4"
+          }`}
+        >
           <div className="inline-block mb-6">
             <div className="text-6xl mb-4 animate-pulse drop-shadow-[0_0_20px_hsl(270,60%,50%,0.5)]">
               🌌
@@ -47,7 +73,14 @@ const Index = () => {
           </p>
         </div>
 
-        <div className="w-full relative z-20 scale-in">
+        <div
+          ref={sphereContentAnim.ref}
+          className={`w-full relative z-20 transition-all duration-1000 delay-400 ${
+            sphereContentAnim.isVisible
+              ? "opacity-100 translate-y-0 scale-100"
+              : "opacity-0 translate-y-4 scale-95"
+          }`}
+        >
           <div className="h-[80vh] w-full overflow-hidden">
             <SphereGallery
               philosophers={philosophers}
@@ -61,7 +94,14 @@ const Index = () => {
       </section>
 
       {/* Philosophy Showcase Section */}
-      <section className="py-24 relative bg-gradient-to-b from-[hsl(240,40%,8%)] via-[hsl(240,45%,6%)] to-[hsl(240,40%,8%)]">
+      <section
+        ref={philosophyShowcaseAnim.ref}
+        className={`py-24 relative bg-gradient-to-b from-[hsl(240,40%,8%)] via-[hsl(240,45%,6%)] to-[hsl(240,40%,8%)] transition-all duration-1000 ${
+          philosophyShowcaseAnim.isVisible
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-8"
+        }`}
+      >
         {/* Nebula background effects */}
         <div className="absolute inset-0 overflow-hidden opacity-25">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[hsl(270,60%,50%)] rounded-full blur-[120px]" />
@@ -72,6 +112,34 @@ const Index = () => {
         <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-[hsl(240,40%,8%)] to-transparent pointer-events-none z-10" />
 
         <div className="relative z-20">
+          <div
+            ref={philosophyTitleAnim.ref}
+            className={`text-center mb-12 transition-all duration-1000 delay-200 ${
+              philosophyTitleAnim.isVisible
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-4"
+            }`}
+          >
+            <div className="inline-block mb-6">
+              <div className="text-6xl mb-4 animate-pulse drop-shadow-[0_0_20px_hsl(270,60%,50%,0.5)]">
+                📚
+              </div>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-black text-[hsl(40,20%,95%)] mb-6 drop-shadow-[0_4px_30px_rgba(0,0,0,0.9)]">
+              Tư Tưởng Triết Học
+            </h2>
+            <p className="text-lg md:text-xl text-[hsl(40,20%,95%)]/70 max-w-3xl mx-auto leading-relaxed">
+              Khám phá{" "}
+              <span className="text-[hsl(270,60%,75%)] font-semibold drop-shadow-[0_0_10px_hsl(270,60%,50%)]">
+                các trường phái triết học
+              </span>{" "}
+              và{" "}
+              <span className="text-[hsl(220,70%,70%)] font-semibold drop-shadow-[0_0_10px_hsl(220,70%,55%)]">
+                tư tưởng kinh điển
+              </span>{" "}
+              qua các thời kỳ lịch sử
+            </p>
+          </div>
           <PhilosophyShowcase />
         </div>
 
@@ -80,7 +148,14 @@ const Index = () => {
       </section>
 
       {/* Interactive Story Analysis Section */}
-      <section className="py-24 px-4 relative bg-gradient-to-b from-[hsl(240,40%,8%)] via-[hsl(240,45%,6%)] to-[hsl(240,50%,4%)]">
+      <section
+        ref={interactiveExperienceAnim.ref}
+        className={`py-24 px-4 relative bg-gradient-to-b from-[hsl(240,40%,8%)] via-[hsl(240,45%,6%)] to-[hsl(240,50%,4%)] transition-all duration-1000 ${
+          interactiveExperienceAnim.isVisible
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-8"
+        }`}
+      >
         {/* Nebula background effects */}
         <div className="absolute inset-0 overflow-hidden opacity-20">
           <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-[hsl(320,60%,60%)] rounded-full blur-[120px]" />
@@ -91,7 +166,14 @@ const Index = () => {
         <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-[hsl(240,40%,8%)] to-transparent pointer-events-none z-10" />
 
         <div className="container mx-auto relative z-20">
-          <div className="text-center mb-16 fade-in-up">
+          <div
+            ref={interactiveTitleAnim.ref}
+            className={`text-center mb-16 transition-all duration-1000 delay-200 ${
+              interactiveTitleAnim.isVisible
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-4"
+            }`}
+          >
             <div className="inline-block mb-6">
               <div className="text-6xl mb-4 drop-shadow-[0_0_20px_hsl(220,70%,55%,0.5)]">
                 🧩
@@ -112,7 +194,13 @@ const Index = () => {
               (15 phút) để hiểu về duy vật lịch sử
             </p>
           </div>
-          <div className="scale-in">
+          <div
+            className={`scale-in transition-all duration-1000 delay-400 ${
+              interactiveExperienceAnim.isVisible
+                ? "opacity-100 translate-y-0 scale-100"
+                : "opacity-0 translate-y-4 scale-95"
+            }`}
+          >
             <InteractiveMLNExperience />
           </div>
         </div>
