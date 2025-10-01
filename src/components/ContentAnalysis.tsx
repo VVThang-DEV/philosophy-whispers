@@ -5,38 +5,53 @@ const ContentAnalysis = () => {
   const sections = [
     {
       icon: BookOpen,
-      title: "The Phenomenon",
-      content: "Despite social development and scientific progress, many people still believe in fortune-telling, spirituality, and charms. In difficult times, they are easily influenced by unfounded beliefs."
+      title: "Hiện Tượng",
+      content:
+        "Dù xã hội phát triển và khoa học tiến bộ, nhiều người vẫn tin vào bói toán, tâm linh và bùa ngải. Trong thời kỳ khó khăn, họ dễ bị ảnh hưởng bởi những niềm tin không có cơ sở.",
     },
     {
       icon: Brain,
-      title: "Historical Materialism",
-      content: "From the perspective of historical materialism, social consciousness is determined by social existence. Backward social conditions, inadequate education, and economic hardship create fertile ground for superstitious beliefs."
+      title: "Chủ Nghĩa Duy Vật Lịch Sử",
+      content:
+        "Từ góc độ chủ nghĩa duy vật lịch sử, ý thức xã hội được quyết định bởi tồn tại xã hội. Điều kiện xã hội lạc hậu, giáo dục không đầy đủ và khó khăn kinh tế tạo nền tảng cho niềm tin mê tín.",
     },
     {
       icon: Users,
-      title: "Social Influences",
-      content: "The analysis must consider: backward social existence, crowd psychology, cultural traditions passed through generations, and the collective mindset that perpetuates such beliefs across communities."
+      title: "Ảnh Hưởng Xã Hội",
+      content:
+        "Phân tích phải xem xét: tồn tại xã hội lạc hậu, tâm lý đám đông, truyền thống văn hóa được truyền qua các thế hệ, và tư duy tập thể duy trì những niềm tin này trong cộng đồng.",
     },
     {
       icon: Lightbulb,
-      title: "Education & Critical Thinking",
-      content: "The role of education and critical thinking is paramount in improving social awareness. Scientific literacy, philosophical reasoning, and evidence-based thinking help society progress beyond superstition."
-    }
+      title: "Giáo Dục & Tư Duy Phản Biện",
+      content:
+        "Vai trò của giáo dục và tư duy phản biện là tối quan trọng trong việc cải thiện nhận thức xã hội. Kiến thức khoa học, lý luận triết học và tư duy dựa trên bằng chứng giúp xã hội vượt qua mê tín.",
+    },
   ];
 
   return (
-    <section className="cosmic-bg min-h-screen py-20">
+    <section className="relative">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16 space-y-4">
-          <h2 className="text-4xl md:text-6xl font-bold">
-            UNDERSTANDING
-            <br />
-            <span className="text-emphasis glow-text">SOCIAL CONSCIOUSNESS</span>
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            A <span className="text-emphasis">philosophical analysis</span> of belief systems and 
-            the <span className="text-emphasis">evolution</span> of social awareness.
+        <div className="text-center mb-16 space-y-6 fade-in-up">
+          <div className="inline-block">
+            <h2 className="text-4xl md:text-6xl font-black text-[hsl(40,20%,95%)]">
+              HIỂU BIẾT
+              <br />
+              <span className="bg-gradient-to-r from-[hsl(270,60%,70%)] via-[hsl(220,70%,65%)] to-[hsl(190,80%,70%)] bg-clip-text text-transparent drop-shadow-[0_0_30px_hsl(270,60%,50%,0.5)]">
+                Ý THỨC XÃ HỘI
+              </span>
+            </h2>
+          </div>
+          <p className="text-lg md:text-xl text-[hsl(40,20%,95%)]/70 max-w-3xl mx-auto leading-relaxed">
+            Một{" "}
+            <span className="text-[hsl(270,60%,70%)] font-semibold">
+              phân tích triết học
+            </span>{" "}
+            về hệ thống niềm tin và sự{" "}
+            <span className="text-[hsl(220,70%,65%)] font-semibold">
+              tiến hóa
+            </span>{" "}
+            của nhận thức xã hội.
           </p>
         </div>
 
@@ -46,17 +61,18 @@ const ContentAnalysis = () => {
             return (
               <Card
                 key={index}
-                className="bg-card/50 backdrop-blur-sm border-border hover:border-accent transition-all duration-300 group"
+                className="bg-[hsl(240,45%,6%)]/50 backdrop-blur-md border-[hsl(270,60%,50%)]/20 hover:border-[hsl(270,60%,50%)]/40 hover:shadow-[0_0_30px_hsl(270,60%,50%,0.2)] transition-all duration-500 group scale-in"
+                style={{ animationDelay: `${index * 100}ms` }}
               >
                 <div className="p-8 flex flex-col md:flex-row gap-6 items-start">
-                  <div className="bg-accent/10 p-4 rounded-lg group-hover:bg-accent/20 transition-colors">
-                    <Icon className="w-8 h-8 text-accent" />
+                  <div className="bg-gradient-to-br from-[hsl(270,60%,50%)]/20 to-[hsl(220,70%,55%)]/20 p-4 rounded-xl group-hover:from-[hsl(270,60%,50%)]/30 group-hover:to-[hsl(220,70%,55%)]/30 transition-all duration-300 shadow-[0_0_20px_hsl(270,60%,50%,0.2)]">
+                    <Icon className="w-8 h-8 text-[hsl(270,60%,70%)]" />
                   </div>
                   <div className="flex-1 space-y-3">
-                    <h3 className="text-2xl font-bold group-hover:text-accent transition-colors">
+                    <h3 className="text-2xl font-bold text-[hsl(40,20%,95%)] group-hover:text-[hsl(270,60%,70%)] transition-colors duration-300">
                       {section.title}
                     </h3>
-                    <p className="text-muted-foreground leading-relaxed">
+                    <p className="text-[hsl(40,20%,95%)]/70 leading-relaxed">
                       {section.content}
                     </p>
                   </div>
@@ -65,28 +81,60 @@ const ContentAnalysis = () => {
             );
           })}
 
-          <Card className="bg-gradient-to-br from-accent/10 to-accent/5 border-accent/50 mt-12">
-            <div className="p-8 space-y-4">
-              <h3 className="text-3xl font-bold text-center">
-                <span className="text-emphasis">Critical Analysis Framework</span>
+          <Card className="bg-gradient-to-br from-[hsl(270,60%,50%)]/20 via-[hsl(220,70%,55%)]/15 to-[hsl(320,60%,60%)]/10 border-[hsl(270,60%,50%)]/40 mt-12 shadow-[0_0_40px_hsl(270,60%,50%,0.3)] backdrop-blur-md scale-in">
+            <div className="p-8 space-y-6">
+              <h3 className="text-3xl md:text-4xl font-black text-center">
+                <span className="bg-gradient-to-r from-[hsl(270,60%,70%)] via-[hsl(220,70%,65%)] to-[hsl(190,80%,70%)] bg-clip-text text-transparent">
+                  Khung Phân Tích Phản Biện
+                </span>
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                <div className="space-y-2">
-                  <h4 className="text-lg font-semibold text-accent">Key Factors</h4>
-                  <ul className="space-y-2 text-muted-foreground">
-                    <li>• Material conditions of existence</li>
-                    <li>• Educational infrastructure</li>
-                    <li>• Cultural heritage and traditions</li>
-                    <li>• Economic development level</li>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                <div className="space-y-4">
+                  <h4 className="text-xl font-bold text-[hsl(270,60%,70%)] flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[hsl(270,60%,70%)] shadow-[0_0_10px_hsl(270,60%,70%)]" />
+                    Yếu Tố Chính
+                  </h4>
+                  <ul className="space-y-3 text-[hsl(40,20%,95%)]/70">
+                    <li className="flex items-start gap-2">
+                      <span className="text-[hsl(270,60%,70%)] mt-1">•</span>
+                      <span>Điều kiện vật chất của sự tồn tại</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[hsl(270,60%,70%)] mt-1">•</span>
+                      <span>Cơ sở hạ tầng giáo dục</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[hsl(270,60%,70%)] mt-1">•</span>
+                      <span>Di sản văn hóa và truyền thống</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[hsl(270,60%,70%)] mt-1">•</span>
+                      <span>Trình độ phát triển kinh tế</span>
+                    </li>
                   </ul>
                 </div>
-                <div className="space-y-2">
-                  <h4 className="text-lg font-semibold text-accent">Solutions</h4>
-                  <ul className="space-y-2 text-muted-foreground">
-                    <li>• Strengthen scientific education</li>
-                    <li>• Promote critical thinking skills</li>
-                    <li>• Improve social welfare systems</li>
-                    <li>• Foster rational discourse</li>
+                <div className="space-y-4">
+                  <h4 className="text-xl font-bold text-[hsl(220,70%,65%)] flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[hsl(220,70%,65%)] shadow-[0_0_10px_hsl(220,70%,65%)]" />
+                    Giải Pháp
+                  </h4>
+                  <ul className="space-y-3 text-[hsl(40,20%,95%)]/70">
+                    <li className="flex items-start gap-2">
+                      <span className="text-[hsl(220,70%,65%)] mt-1">•</span>
+                      <span>Tăng cường giáo dục khoa học</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[hsl(220,70%,65%)] mt-1">•</span>
+                      <span>Phát triển kỹ năng tư duy phản biện</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[hsl(220,70%,65%)] mt-1">•</span>
+                      <span>Cải thiện hệ thống phúc lợi xã hội</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[hsl(220,70%,65%)] mt-1">•</span>
+                      <span>Khuyến khích diễn ngôn lý trí</span>
+                    </li>
                   </ul>
                 </div>
               </div>
