@@ -163,3 +163,106 @@ export function getPhilosopherGreeting(philosopher: Philosopher): string {
     `Xin chào! Tôi là ${philosopher.name}. Hãy cùng thảo luận về triết học!`
   );
 }
+
+// Debate mode function
+export async function generateDebateResponse(
+  philosopher: Philosopher,
+  userQuestion: string,
+  messageHistory: Array<{ speaker: string; content: string }>,
+  opponentLastMessage: string | null,
+  isRebuttal: boolean = false
+): Promise<string> {
+  try {
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+
+    // Build context from message history
+    const historyContext = messageHistory
+      .slice(-6) // Last 6 messages for context
+      .map((msg) => {
+        if (msg.speaker === "user") return `[Câu hỏi]: ${msg.content}`;
+        if (msg.speaker === "philosopher1" || msg.speaker === "philosopher2") {
+          return `[Đối thủ]: ${msg.content}`;
+        }
+        return msg.content;
+      })
+      .join("\n");
+
+    let prompt = "";
+
+    if (isRebuttal && opponentLastMessage) {
+      // Rebuttal mode - respond to opponent
+      prompt = `Bạn là ${philosopher.name}, triết gia ${
+        philosopher.era
+      } thuộc trường phái ${philosopher.school}.
+
+${philosopher.context}
+
+Ý tưởng chính: ${philosopher.keyIdeas.slice(0, 3).join(", ")}
+
+TÌNH HUỐNG TRANH LUẬN:
+Đối thủ vừa nói: "${opponentLastMessage}"
+
+NHIỆM VỤ:
+1. Phản biện lại quan điểm của đối thủ TỪ GÓC NHÌN ${philosopher.school}
+2. Chỉ ra điểm yếu trong lập luận của họ
+3. Củng cố quan điểm của bạn bằng ví dụ và lý lẽ
+4. Giữ câu trả lời ngắn gọn (2-3 câu), sắc bén và thuyết phục
+5. Sử dụng giọng điệu tự tin và đanh thép
+6. TRẢ LỜI HOÀN TOÀN BẰNG TIẾNG VIỆT
+
+Phản biện ngắn gọn:`;
+    } else if (opponentLastMessage) {
+      // Response after opponent spoke
+      prompt = `Bạn là ${philosopher.name}, triết gia ${
+        philosopher.era
+      } thuộc trường phái ${philosopher.school}.
+
+${philosopher.context}
+
+Ý tưởng chính: ${philosopher.keyIdeas.slice(0, 3).join(", ")}
+
+CUỘC TRANH LUẬN:
+Câu hỏi: "${userQuestion}"
+Đối thủ vừa trả lời: "${opponentLastMessage}"
+
+NHIỆM VỤ:
+1. Đưa ra quan điểm KHÁC BIỆT hoàn toàn với đối thủ
+2. Phản bác hoặc bổ sung góc nhìn mới
+3. Thể hiện rõ sự khác biệt về trường phái tư tưởng
+4. Giữ câu trả lời vừa phải (3-4 câu), sâu sắc và thuyết phục
+5. TRẢ LỜI HOÀN TOÀN BẰNG TIẾNG VIỆT
+
+Quan điểm của bạn:`;
+    } else {
+      // First response to user question
+      prompt = `Bạn là ${philosopher.name}, triết gia ${
+        philosopher.era
+      } thuộc trường phái ${philosopher.school}.
+
+${philosopher.context}
+
+Ý tưởng chính: ${philosopher.keyIdeas.slice(0, 3).join(", ")}
+
+Câu nói nổi tiếng: "${philosopher.famousQuote}"
+
+CUỘC TRANH LUẬN:
+Câu hỏi: "${userQuestion}"
+
+NHIỆM VỤ:
+1. Trả lời câu hỏi TỪ GÓC NHÌN ${philosopher.school}
+2. Thể hiện rõ quan điểm triết học đặc trưng của bạn
+3. Giữ câu trả lời vừa phải (3-4 câu), sâu sắc
+4. Sử dụng giọng điệu tự tin, thể hiện cá tính
+5. TRẢ LỜI HOÀN TOÀN BẰNG TIẾNG VIỆT
+
+Câu trả lời của bạn:`;
+    }
+
+    const result = await model.generateContent(prompt);
+    const response = result.response;
+    return response.text();
+  } catch (error) {
+    console.error("Error in debate response:", error);
+    return `[${philosopher.name}] Xin lỗi, tôi cần thời gian suy ngẫm thêm về vấn đề này...`;
+  }
+}

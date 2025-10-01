@@ -1012,86 +1012,10 @@ class InfiniteGridMenu {
           pot: isPOT(canvas.width) && isPOT(canvas.height),
         });
         // expose for temporary inspection
-        if (typeof window !== "undefined") {
-          // dev helper access
-          (window as any).__SPHERE_ATLAS = {
-            canvas,
-            atlasSize: this.atlasSize,
-          };
-          // trigger auto-append preview (dev-only)
-          try {
-            setTimeout(() => {
-              // dev helper access
-              if (
-                (window as any).__SPHERE_ATLAS &&
-                !document.getElementById("__sphere_atlas_preview")
-              ) {
-                const canvasGlobal = (window as any).__SPHERE_ATLAS.canvas;
-                if (canvasGlobal) {
-                  const wrapper = document.createElement("div");
-                  wrapper.id = "__sphere_atlas_preview";
-                  wrapper.style.position = "fixed";
-                  wrapper.style.bottom = "16px";
-                  wrapper.style.right = "16px";
-                  wrapper.style.border = "2px solid rgba(255,255,255,0.08)";
-                  wrapper.style.background = "rgba(0,0,0,0.6)";
-                  wrapper.style.padding = "8px";
-                  wrapper.style.zIndex = "99999";
-                  const title = document.createElement("div");
-                  title.style.color = "#fff";
-                  title.style.fontSize = "12px";
-                  title.style.marginBottom = "6px";
-                  title.innerText = "Sphere atlas (dev)";
-                  const clone = canvasGlobal.cloneNode(
-                    true
-                  ) as HTMLCanvasElement;
-                  clone.style.width = "200px";
-                  clone.style.height = "200px";
-                  wrapper.appendChild(title);
-                  wrapper.appendChild(clone);
-                  document.body.appendChild(wrapper);
-                }
-              }
-            }, 600);
-          } catch (e) {
-            // ignore
-          }
-        }
       } catch (e) {
         // ignore
       }
     });
-  }
-
-  // Dev helper: append atlas to DOM for inspection
-  appendAtlasToDOM() {
-    // @ts-expect-error dev helper: window.__SPHERE_ATLAS may not be typed
-    if (typeof window === "undefined" || !window.__SPHERE_ATLAS) return;
-    // @ts-expect-error dev helper access
-    const { canvas } = window.__SPHERE_ATLAS;
-    if (!canvas) return;
-    const id = "__sphere_atlas_preview";
-    if (document.getElementById(id)) return;
-    const wrapper = document.createElement("div");
-    wrapper.id = id;
-    wrapper.style.position = "fixed";
-    wrapper.style.bottom = "16px";
-    wrapper.style.right = "16px";
-    wrapper.style.border = "2px solid rgba(255,255,255,0.08)";
-    wrapper.style.background = "rgba(0,0,0,0.6)";
-    wrapper.style.padding = "8px";
-    wrapper.style.zIndex = "99999";
-    const title = document.createElement("div");
-    title.style.color = "#fff";
-    title.style.fontSize = "12px";
-    title.style.marginBottom = "6px";
-    title.innerText = "Sphere atlas (dev)";
-    const clone = canvas.cloneNode(true) as HTMLCanvasElement;
-    clone.style.width = "200px";
-    clone.style.height = "200px";
-    wrapper.appendChild(title);
-    wrapper.appendChild(clone);
-    document.body.appendChild(wrapper);
   }
 
   initDiscInstances(count: number) {
@@ -1472,9 +1396,6 @@ export default function DomeGallery({
       )}
 
       <div className="absolute top-8 left-1/2 -translate-x-1/2 text-center">
-        <h1 className="text-3xl font-black text-[hsl(40,20%,95%)] drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)] mb-2">
-          🌌 Vũ Trụ Triết Học
-        </h1>
         <p className="text-[hsl(270,60%,75%)] text-sm drop-shadow-[0_0_10px_hsl(270,60%,50%,0.5)]">
           Kéo để khám phá • Nhấp để trò chuyện
         </p>

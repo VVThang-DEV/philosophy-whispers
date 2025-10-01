@@ -1,6 +1,7 @@
 import HeroNew from "@/components/HeroNew";
 import SphereGallery from "@/components/SphereGallery";
-import ContentAnalysis from "@/components/ContentAnalysis";
+import PhilosophyShowcase from "@/components/PhilosophyShowcase";
+import VisualNovelAnalysis from "@/components/VisualNovelAnalysis";
 import { philosophers } from "@/data/philosophers";
 import type { Philosopher } from "@/data/philosophers";
 import { useNavigate } from "react-router-dom";
@@ -59,7 +60,26 @@ const Index = () => {
         <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-b from-transparent to-[hsl(240,40%,8%)] pointer-events-none z-10" />
       </section>
 
-      {/* Content Analysis Section with smooth transition */}
+      {/* Philosophy Showcase Section */}
+      <section className="py-24 relative bg-gradient-to-b from-[hsl(240,40%,8%)] via-[hsl(240,45%,6%)] to-[hsl(240,40%,8%)]">
+        {/* Nebula background effects */}
+        <div className="absolute inset-0 overflow-hidden opacity-25">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[hsl(270,60%,50%)] rounded-full blur-[120px]" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[hsl(220,70%,55%)] rounded-full blur-[120px]" />
+        </div>
+
+        {/* Top gradient overlay */}
+        <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-[hsl(240,40%,8%)] to-transparent pointer-events-none z-10" />
+
+        <div className="relative z-20">
+          <PhilosophyShowcase />
+        </div>
+
+        {/* Bottom gradient transition */}
+        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-b from-transparent to-[hsl(240,40%,8%)] pointer-events-none z-10" />
+      </section>
+
+      {/* Interactive Story Analysis Section */}
       <section className="py-24 px-4 relative bg-gradient-to-b from-[hsl(240,40%,8%)] via-[hsl(240,45%,6%)] to-[hsl(240,50%,4%)]">
         {/* Nebula background effects */}
         <div className="absolute inset-0 overflow-hidden opacity-20">
@@ -74,22 +94,22 @@ const Index = () => {
           <div className="text-center mb-16 fade-in-up">
             <div className="inline-block mb-6">
               <div className="text-6xl mb-4 drop-shadow-[0_0_20px_hsl(220,70%,55%,0.5)]">
-                📚
+                🧩
               </div>
             </div>
             <h2 className="text-4xl md:text-6xl font-black text-[hsl(40,20%,95%)] mb-6 drop-shadow-[0_4px_30px_rgba(0,0,0,0.9)]">
-              Phân Tích Nội Dung
+              Phân Tích Tương Tác
             </h2>
             <p className="text-lg md:text-xl text-[hsl(40,20%,95%)]/70 max-w-3xl mx-auto leading-relaxed">
-              Tìm hiểu sâu về các{" "}
+              Giải quyết bài tập thông qua{" "}
               <span className="text-[hsl(220,70%,70%)] font-semibold drop-shadow-[0_0_10px_hsl(220,70%,55%)]">
-                khái niệm triết học
+                trải nghiệm tương tác
               </span>{" "}
-              quan trọng
+              về duy vật lịch sử và ý thức xã hội
             </p>
           </div>
           <div className="scale-in">
-            <ContentAnalysis />
+            <VisualNovelAnalysis />
           </div>
         </div>
 

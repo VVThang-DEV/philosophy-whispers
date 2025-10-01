@@ -1,25 +1,9 @@
-import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, Sparkles, Brain, BookOpen, Quote } from "lucide-react";
 
 const Hero = () => {
-  const [scrollY, setScrollY] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   const scrollToContent = () => {
-    setIsTransitioning(true);
-
-    // Animate out each text element with stagger
-    setTimeout(() => {
-      window.scrollTo({ top: window.innerHeight * 1.8, behavior: "smooth" });
-      setTimeout(() => setIsTransitioning(false), 1500);
-    }, 1200);
+    window.scrollTo({ top: window.innerHeight, behavior: "smooth" });
   };
 
   return (
@@ -87,53 +71,26 @@ const Hero = () => {
       </div>
 
       {/* Hero Content */}
-      <div
-        className="relative z-20 flex items-center justify-center min-h-[180vh] px-4 py-20"
-        style={{ transform: `translateY(${scrollY * 0.3}px)` }}
-      >
+      <div className="relative z-20 flex items-center justify-center min-h-screen px-4 py-20">
         <div className="container mx-auto text-center max-w-6xl">
           <div className="space-y-12">
             {/* Main Title */}
             <div className="space-y-6">
-              <h1
-                className={`text-5xl md:text-7xl lg:text-8xl font-black leading-tight tracking-tight transition-all duration-700 ${
-                  isTransitioning
-                    ? "opacity-0 translate-y-[-100px] scale-90"
-                    : "opacity-100 translate-y-0 scale-100"
-                }`}
-              >
-                <span
-                  className={`block text-[hsl(40,20%,95%)] drop-shadow-[0_4px_30px_rgba(0,0,0,0.9)] transition-all duration-500 ${
-                    isTransitioning ? "translate-x-[-200px] opacity-0" : ""
-                  }`}
-                >
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black leading-tight tracking-tight">
+                <span className="block text-[hsl(40,20%,95%)] drop-shadow-[0_4px_30px_rgba(0,0,0,0.9)]">
                   KHÁM PHÁ
                 </span>
-                <span
-                  className={`block bg-gradient-to-r from-[hsl(270,60%,70%)] via-[hsl(220,70%,65%)] to-[hsl(190,80%,70%)] bg-clip-text text-transparent animate-gradient drop-shadow-[0_0_50px_hsl(270,60%,50%,0.5)] transition-all duration-700 delay-100 ${
-                    isTransitioning ? "scale-150 opacity-0" : ""
-                  }`}
-                >
+                <span className="block bg-gradient-to-r from-[hsl(270,60%,70%)] via-[hsl(220,70%,65%)] to-[hsl(190,80%,70%)] bg-clip-text text-transparent animate-gradient drop-shadow-[0_0_50px_hsl(270,60%,50%,0.5)]">
                   TRIẾT HỌC
                 </span>
-                <span
-                  className={`block text-[hsl(40,20%,95%)] drop-shadow-[0_4px_30px_rgba(0,0,0,0.9)] transition-all duration-500 delay-200 ${
-                    isTransitioning ? "translate-x-[200px] opacity-0" : ""
-                  }`}
-                >
+                <span className="block text-[hsl(40,20%,95%)] drop-shadow-[0_4px_30px_rgba(0,0,0,0.9)]">
                   VĨNH CỬU
                 </span>
               </h1>
             </div>
 
             {/* Subtitle */}
-            <div
-              className={`transition-all duration-700 delay-300 ${
-                isTransitioning
-                  ? "opacity-0 translate-y-[50px]"
-                  : "opacity-100 translate-y-0"
-              }`}
-            >
+            <div>
               <p className="text-lg md:text-2xl text-[hsl(40,20%,95%)]/80 max-w-4xl mx-auto leading-relaxed">
                 Khám phá{" "}
                 <span className="text-[hsl(270,60%,75%)] font-semibold drop-shadow-[0_0_15px_hsl(270,60%,50%,0.5)]">
@@ -152,13 +109,7 @@ const Hero = () => {
             </div>
 
             {/* Expanded Content - Philosophy Description */}
-            <div
-              className={`max-w-5xl mx-auto space-y-8 pt-8 transition-all duration-700 delay-400 ${
-                isTransitioning
-                  ? "opacity-0 translate-y-[50px]"
-                  : "opacity-100 translate-y-0"
-              }`}
-            >
+            <div className="max-w-5xl mx-auto space-y-8 pt-8">
               <div className="grid md:grid-cols-3 gap-6">
                 <div className="p-6 rounded-2xl bg-gradient-to-br from-[hsl(270,60%,50%)]/10 to-[hsl(270,60%,50%)]/5 border border-[hsl(270,60%,50%)]/20 backdrop-blur-sm hover:border-[hsl(270,60%,50%)]/40 transition-all duration-300 hover:shadow-[0_0_30px_hsl(270,60%,50%,0.2)]">
                   <Brain className="w-10 h-10 text-[hsl(270,60%,70%)] mb-4 drop-shadow-[0_0_10px_hsl(270,60%,50%)]" />
@@ -196,13 +147,7 @@ const Hero = () => {
             </div>
 
             {/* Philosopher Preview */}
-            <div
-              className={`max-w-4xl mx-auto pt-12 transition-all duration-700 delay-500 ${
-                isTransitioning
-                  ? "opacity-0 translate-y-[50px]"
-                  : "opacity-100 translate-y-0"
-              }`}
-            >
+            <div className="max-w-4xl mx-auto pt-12">
               <div className="flex items-center justify-center gap-3 mb-8">
                 <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[hsl(270,60%,50%)]/50 to-transparent"></div>
                 <Quote className="w-6 h-6 text-[hsl(270,60%,70%)]" />
@@ -240,50 +185,38 @@ const Hero = () => {
               </div>
             </div>
 
-            {/* CTA Button */}
-            <div
-              className={`pt-12 transition-all duration-700 delay-600 ${
-                isTransitioning
-                  ? "opacity-0 scale-75 translate-y-[100px]"
-                  : "opacity-100 scale-100 translate-y-0"
-              }`}
-            >
-              <Button
-                onClick={scrollToContent}
-                disabled={isTransitioning}
-                size="lg"
-                className="group relative overflow-hidden bg-gradient-to-r from-[hsl(270,60%,50%)] via-[hsl(220,70%,55%)] to-[hsl(190,80%,60%)] hover:from-[hsl(270,60%,55%)] hover:via-[hsl(220,70%,60%)] hover:to-[hsl(190,80%,65%)] text-white font-bold text-lg px-12 py-8 rounded-full shadow-[0_0_40px_hsl(270,60%,50%,0.5)] hover:shadow-[0_0_60px_hsl(270,60%,50%,0.7)] transition-all duration-500 hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <span className="relative z-10 flex items-center gap-3">
-                  Bắt Đầu Hành Trình
-                  <ChevronDown className="w-6 h-6 animate-bounce" />
-                </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-[hsl(190,80%,60%)] via-[hsl(270,60%,50%)] to-[hsl(220,70%,55%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              </Button>
+            {/* CTA Buttons */}
+            <div className="pt-12">
+              <div className="flex flex-col md:flex-row gap-4 items-center justify-center">
+                <Button
+                  onClick={scrollToContent}
+                  size="lg"
+                  className="group relative overflow-hidden bg-gradient-to-r from-[hsl(270,60%,50%)] via-[hsl(220,70%,55%)] to-[hsl(190,80%,60%)] hover:from-[hsl(270,60%,55%)] hover:via-[hsl(220,70%,60%)] hover:to-[hsl(190,80%,65%)] text-white font-bold text-lg px-12 py-8 rounded-full shadow-[0_0_40px_hsl(270,60%,50%,0.5)] hover:shadow-[0_0_60px_hsl(270,60%,50%,0.7)] transition-all duration-500 hover:scale-110"
+                >
+                  <span className="relative z-10 flex items-center gap-3">
+                    Bắt Đầu Hành Trình
+                    <ChevronDown className="w-6 h-6 animate-bounce" />
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-[hsl(190,80%,60%)] via-[hsl(270,60%,50%)] to-[hsl(220,70%,55%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                </Button>
+
+                <Button
+                  onClick={() => (window.location.href = "/debate")}
+                  size="lg"
+                  className="group relative overflow-hidden bg-gradient-to-r from-[hsl(320,60%,60%)] via-[hsl(270,60%,55%)] to-[hsl(220,70%,55%)] hover:from-[hsl(320,60%,65%)] hover:via-[hsl(270,60%,60%)] hover:to-[hsl(220,70%,60%)] text-white font-bold text-lg px-12 py-8 rounded-full shadow-[0_0_40px_hsl(320,60%,60%,0.5)] hover:shadow-[0_0_60px_hsl(320,60%,60%,0.7)] transition-all duration-500 hover:scale-110 border-2 border-[hsl(320,60%,70%)]/50"
+                >
+                  <span className="relative z-10 flex items-center gap-3">
+                    <Sparkles className="w-5 h-5" />
+                    Debate Mode
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-[hsl(220,70%,55%)] via-[hsl(320,60%,60%)] to-[hsl(270,60%,55%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                </Button>
+              </div>
               <p className="text-[hsl(40,20%,95%)]/50 text-sm mt-6">
-                Nhấp để bắt đầu khám phá vũ trụ triết học
+                Khám phá vũ trụ triết học hoặc xem các triết gia tranh luận
               </p>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Scroll Indicator */}
-      <div
-        className={`absolute bottom-10 left-1/2 -translate-x-1/2 z-30 animate-bounce transition-all duration-700 ${
-          isTransitioning
-            ? "opacity-0 translate-y-[50px]"
-            : "opacity-100 translate-y-0"
-        }`}
-      >
-        <div
-          className="flex flex-col items-center gap-2 text-[hsl(40,20%,95%)]/60 hover:text-[hsl(270,60%,70%)] transition-all duration-300 cursor-pointer hover:drop-shadow-[0_0_15px_hsl(270,60%,50%)]"
-          onClick={scrollToContent}
-        >
-          <span className="text-xs uppercase tracking-widest font-medium">
-            Cuộn xuống
-          </span>
-          <ChevronDown className="w-6 h-6" />
         </div>
       </div>
 
