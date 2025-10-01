@@ -52,9 +52,13 @@ export default {
           darker: "hsl(var(--cosmic-darker))",
           light: "hsl(var(--cosmic-light))",
         },
-        gold: {
-          DEFAULT: "hsl(var(--gold))",
-          muted: "hsl(var(--gold-muted))",
+        cyan: {
+          DEFAULT: "hsl(var(--cyan))",
+          bright: "hsl(var(--cyan-bright))",
+        },
+        purple: {
+          DEFAULT: "hsl(var(--purple))",
+          deep: "hsl(var(--purple-deep))",
         },
       },
       borderRadius: {
