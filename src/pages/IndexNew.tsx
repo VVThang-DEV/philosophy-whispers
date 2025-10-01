@@ -1,7 +1,7 @@
 import HeroNew from "@/components/HeroNew";
 import SphereGallery from "@/components/SphereGallery";
 import PhilosophyShowcase from "@/components/PhilosophyShowcase";
-import VisualNovelAnalysis from "@/components/VisualNovelAnalysis";
+import InteractiveMLNExperience from "@/components/InteractiveMLNExperience";
 import { philosophers } from "@/data/philosophers";
 import type { Philosopher } from "@/data/philosophers";
 import { useNavigate } from "react-router-dom";
@@ -98,18 +98,22 @@ const Index = () => {
               </div>
             </div>
             <h2 className="text-4xl md:text-6xl font-black text-[hsl(40,20%,95%)] mb-6 drop-shadow-[0_4px_30px_rgba(0,0,0,0.9)]">
-              Phân Tích Tương Tác
+              Trải Nghiệm Duy Vật Lịch Sử
             </h2>
             <p className="text-lg md:text-xl text-[hsl(40,20%,95%)]/70 max-w-3xl mx-auto leading-relaxed">
-              Giải quyết bài tập thông qua{" "}
-              <span className="text-[hsl(220,70%,70%)] font-semibold drop-shadow-[0_0_10px_hsl(220,70%,55%)]">
-                trải nghiệm tương tác
+              Chọn{" "}
+              <span className="text-[hsl(270,60%,75%)] font-semibold drop-shadow-[0_0_10px_hsl(270,60%,50%)]">
+                Câu Chuyện Nhanh
               </span>{" "}
-              về duy vật lịch sử và ý thức xã hội
+              (5 phút) hoặc{" "}
+              <span className="text-[hsl(220,70%,70%)] font-semibold drop-shadow-[0_0_10px_hsl(220,70%,55%)]">
+                Mô Phỏng Đầy Đủ
+              </span>{" "}
+              (15 phút) để hiểu về duy vật lịch sử
             </p>
           </div>
           <div className="scale-in">
-            <VisualNovelAnalysis />
+            <InteractiveMLNExperience />
           </div>
         </div>
 
