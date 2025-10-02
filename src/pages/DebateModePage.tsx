@@ -1,11 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { philosophers } from "@/data/philosophers";
 import type { Philosopher } from "@/data/philosophers";
 import PhilosopherDebate from "@/components/PhilosopherDebate";
-import { ArrowLeft, Swords, Sparkles } from "lucide-react";
+import { ArrowLeft, Swords, Sparkles, Info } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const DebateModePage = () => {
   const navigate = useNavigate();
@@ -14,6 +22,16 @@ const DebateModePage = () => {
   const [selectedPhilosopher2, setSelectedPhilosopher2] =
     useState<Philosopher | null>(null);
   const [debateStarted, setDebateStarted] = useState(false);
+  const [showTipModal, setShowTipModal] = useState(false);
+
+  useEffect(() => {
+    // Show tip modal on first visit
+    const hasSeenTip = localStorage.getItem("debate-mode-tip-seen");
+    if (!hasSeenTip) {
+      setShowTipModal(true);
+      localStorage.setItem("debate-mode-tip-seen", "true");
+    }
+  }, []);
 
   const handleStartDebate = () => {
     if (selectedPhilosopher1 && selectedPhilosopher2) {
@@ -54,7 +72,7 @@ const DebateModePage = () => {
           <Button
             onClick={() => navigate("/")}
             variant="ghost"
-            className="mb-6 text-[hsl(270,60%,75%)] hover:text-[hsl(270,60%,85%)]"
+            className="mb-6 text-[hsl(270,60%,75%)] hover:text-[hsl(270,60%,85%)] hover:bg-transparent"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Quay lại trang chủ
@@ -65,6 +83,14 @@ const DebateModePage = () => {
             <h1 className="text-5xl md:text-7xl font-black text-[hsl(40,20%,95%)]">
               Debate Mode
             </h1>
+            <Button
+              onClick={() => setShowTipModal(true)}
+              variant="ghost"
+              size="sm"
+              className="text-[hsl(270,60%,75%)] hover:text-[hsl(270,60%,85%)] hover:bg-[hsl(270,60%,50%)]/10"
+            >
+              <Info className="w-4 h-4" />
+            </Button>
             <Sparkles
               className="w-12 h-12 text-[hsl(220,70%,65%)] animate-spin"
               style={{ animationDuration: "3s" }}
@@ -116,7 +142,7 @@ const DebateModePage = () => {
                   <Button
                     onClick={() => setSelectedPhilosopher1(null)}
                     variant="outline"
-                    className="border-[hsl(270,60%,50%)]/40 hover:bg-[hsl(270,60%,50%)]/20"
+                    className="border-[hsl(270,60%,50%)]/40 hover:bg-[hsl(270,60%,50%)]/20 hover:text-[hsl(40,20%,95%)] hover:border-[hsl(270,60%,50%)]/60"
                   >
                     Chọn lại
                   </Button>
@@ -163,7 +189,7 @@ const DebateModePage = () => {
                   <Button
                     onClick={() => setSelectedPhilosopher2(null)}
                     variant="outline"
-                    className="border-[hsl(220,70%,55%)]/40 hover:bg-[hsl(220,70%,55%)]/20"
+                    className="border-[hsl(220,70%,55%)]/40 hover:bg-[hsl(220,70%,55%)]/20 hover:text-[hsl(40,20%,95%)] hover:border-[hsl(220,70%,55%)]/60"
                   >
                     Chọn lại
                   </Button>
@@ -260,6 +286,80 @@ const DebateModePage = () => {
           </div>
         )}
       </div>
+
+      {/* Tip Modal */}
+      <Dialog open={showTipModal} onOpenChange={setShowTipModal}>
+        <DialogContent className="bg-[hsl(240,45%,6%)] border-[hsl(270,60%,50%)]/30 text-[hsl(40,20%,95%)] max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-[hsl(270,60%,90%)] flex items-center gap-2">
+              <Info className="w-6 h-6" />
+              Hướng Dẫn Debate Mode
+            </DialogTitle>
+            <DialogDescription className="text-[hsl(270,60%,70%)]">
+              Tìm hiểu cách chơi chế độ tranh luận triết học!
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 text-[hsl(40,20%,95%)]">
+            <div className="bg-[hsl(240,45%,8%)]/60 rounded-lg p-4 border border-[hsl(270,60%,50%)]/20">
+              <h3 className="font-bold text-[hsl(270,60%,80%)] mb-2">
+                🎭 Cách Chơi:
+              </h3>
+              <ul className="space-y-2 text-sm">
+                <li>• Chọn 2 triết gia khác nhau để tranh luận</li>
+                <li>• Đặt câu hỏi để họ bắt đầu cuộc tranh luận</li>
+                <li>• Mỗi triết gia có 2 trái tim ❤️</li>
+                <li>• Họ sẽ tranh luận 2-3 lượt qua lại</li>
+                <li>
+                  • Bạn quyết định ai thắng bằng cách chọn quan điểm bạn đồng ý
+                  hơn
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-[hsl(240,45%,8%)]/60 rounded-lg p-4 border border-[hsl(270,60%,50%)]/20">
+              <h3 className="font-bold text-[hsl(270,60%,80%)] mb-2">
+                ⚖️ Quy Tắc:
+              </h3>
+              <ul className="space-y-2 text-sm">
+                <li>
+                  • Mỗi triết gia sẽ đưa ra quan điểm từ góc nhìn triết học của
+                  họ
+                </li>
+                <li>• Họ có thể phản biện lại lập luận của đối thủ</li>
+                <li>
+                  • Cuộc tranh luận kết thúc khi một bên hết trái tim hoặc đạt
+                  giới hạn lượt
+                </li>
+                <li>• Người chiến thắng là triết gia bạn chọn</li>
+              </ul>
+            </div>
+
+            <div className="bg-[hsl(240,45%,8%)]/60 rounded-lg p-4 border border-[hsl(270,60%,50%)]/20">
+              <h3 className="font-bold text-[hsl(270,60%,80%)] mb-2">
+                💡 Mẹo:
+              </h3>
+              <ul className="space-y-2 text-sm">
+                <li>• Chọn câu hỏi sâu sắc để có cuộc tranh luận thú vị</li>
+                <li>
+                  • Chọn triết gia từ các trường phái khác nhau để tăng tính đối
+                  lập
+                </li>
+                <li>• Lắng nghe cả hai quan điểm trước khi quyết định</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="flex justify-end">
+            <Button
+              onClick={() => setShowTipModal(false)}
+              className="bg-[hsl(270,60%,50%)] hover:bg-[hsl(270,60%,60%)] text-white"
+            >
+              Bắt Đầu!
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

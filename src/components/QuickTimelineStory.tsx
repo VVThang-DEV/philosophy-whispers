@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   ArrowLeft,
   ArrowRight,
@@ -317,7 +318,7 @@ const QuickTimelineStory = ({ onBack }: QuickTimelineStoryProps) => {
   if (isComplete) {
     return (
       <div className="h-screen bg-gradient-to-b from-[hsl(240,45%,6%)] to-[hsl(240,40%,8%)] flex flex-col">
-        <div className="flex-1 flex flex-col p-3 sm:p-6 md:p-8 overflow-y-auto">
+        <ScrollArea className="flex-1 p-3 sm:p-6 md:p-8">
           <div className="container mx-auto max-w-4xl flex flex-col">
             <Card className="bg-[hsl(240,45%,8%)]/95 backdrop-blur-xl border-[hsl(140,60%,50%)]/40 overflow-hidden flex flex-col">
               <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden">
@@ -430,7 +431,7 @@ const QuickTimelineStory = ({ onBack }: QuickTimelineStoryProps) => {
                   <Button
                     onClick={onBack}
                     variant="outline"
-                    className="flex-1 border-[hsl(40,20%,95%)]/20 hover:bg-[hsl(40,20%,95%)]/10 py-5 sm:py-6"
+                    className="flex-1 border-[hsl(40,20%,95%)]/50 hover:bg-[hsl(270,60%,50%)]/30 py-5 sm:py-6 text-[hsl(40,20%,95%)]"
                   >
                     <ArrowLeft className="w-4 h-4 mr-2" />
                     Quay Lại
@@ -452,23 +453,23 @@ const QuickTimelineStory = ({ onBack }: QuickTimelineStoryProps) => {
               </div>
             </Card>
           </div>
-        </div>
+        </ScrollArea>
       </div>
     );
   }
 
   return (
     <div className="h-screen bg-gradient-to-b from-[hsl(240,45%,6%)] to-[hsl(240,40%,8%)] flex flex-col">
-      <div className="flex-1 flex flex-col p-3 sm:p-6 md:p-8 overflow-y-auto">
+      <ScrollArea className="flex-1 p-3 sm:p-6 md:p-8">
         <div className="container mx-auto max-w-5xl flex flex-col">
           {/* Progress Bar */}
           <div className="mb-4 sm:mb-6">
-            <div className="flex justify-between items-center mb-2">
+            <div className="flex justify-between items-center mb-4">
               <Button
                 onClick={onBack}
                 variant="outline"
                 size="sm"
-                className="border-[hsl(40,20%,95%)]/20 hover:bg-[hsl(40,20%,95%)]/10 text-xs sm:text-sm"
+                className="border-[hsl(40,20%,95%)]/50 hover:bg-[hsl(270,60%,50%)]/30 hover:text-white text-xs sm:text-sm text-[hsl(40,20%,95%)]"
               >
                 <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                 Quay Lại
@@ -601,7 +602,7 @@ const QuickTimelineStory = ({ onBack }: QuickTimelineStoryProps) => {
             </div>
           </Card>
         </div>
-      </div>
+      </ScrollArea>
     </div>
   );
 };

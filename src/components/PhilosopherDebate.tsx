@@ -4,6 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar } from "@/components/ui/avatar";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
   Heart,
   Swords,
   Send,
@@ -11,6 +20,7 @@ import {
   Trophy,
   RotateCcw,
   Sparkles,
+  Info,
 } from "lucide-react";
 import type { Philosopher } from "@/data/philosophers";
 import { generateDebateResponse } from "@/services/geminiService";
@@ -372,11 +382,145 @@ const PhilosopherDebate = ({
               </div>
 
               {/* VS Badge */}
-              <div className="px-6">
+              <div className="px-6 flex flex-col items-center gap-2">
                 <div className="relative">
                   <Swords className="w-12 h-12 text-[hsl(270,60%,70%)] animate-pulse" />
                   <Sparkles className="w-4 h-4 text-yellow-500 absolute -top-1 -right-1 animate-spin" />
                 </div>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-[hsl(270,60%,75%)] hover:text-[hsl(270,60%,85%)] hover:bg-[hsl(270,60%,50%)]/10 focus:ring-[hsl(270,60%,50%)] focus:ring-offset-0"
+                    >
+                      <Info className="w-4 h-4" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="bg-[hsl(240,45%,6%)] border-[hsl(270,60%,50%)]/30 text-[hsl(40,20%,95%)] max-w-4xl max-h-[80vh] overflow-y-auto [&>button]:text-[hsl(270,60%,75%)] [&>button]:hover:text-[hsl(270,60%,85%)] [&>button]:hover:bg-transparent [&>button]:focus:ring-0 [&>button]:focus:ring-offset-0">
+                    <DialogHeader>
+                      <DialogTitle className="text-2xl font-bold text-[hsl(270,60%,90%)] flex items-center gap-2">
+                        <Info className="w-6 h-6" />
+                        Thông Tin Triết Gia
+                      </DialogTitle>
+                      <DialogDescription className="text-[hsl(270,60%,70%)]">
+                        Tìm hiểu về hai triết gia đang tranh luận
+                      </DialogDescription>
+                    </DialogHeader>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Philosopher 1 Info */}
+                      <div className="bg-[hsl(240,45%,8%)]/60 rounded-lg p-4 border border-[hsl(270,60%,50%)]/20">
+                        <div className="flex items-center gap-3 mb-4">
+                          <img
+                            src={philosopher1.avatar}
+                            alt={philosopher1.name}
+                            className="w-12 h-12 rounded-full border-2 border-[hsl(270,60%,50%)]"
+                          />
+                          <div>
+                            <h3 className="font-bold text-[hsl(270,60%,90%)]">
+                              {philosopher1.name}
+                            </h3>
+                            <p className="text-sm text-[hsl(270,60%,70%)]">
+                              {philosopher1.era} • {philosopher1.school}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="space-y-3">
+                          <div>
+                            <h4 className="font-semibold text-[hsl(40,20%,95%)] mb-1">
+                              Bối Cảnh:
+                            </h4>
+                            <p className="text-sm text-[hsl(40,20%,95%)]/80">
+                              {philosopher1.context}
+                            </p>
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-[hsl(40,20%,95%)] mb-1">
+                              Ý Tưởng Chính:
+                            </h4>
+                            <ul className="text-sm text-[hsl(40,20%,95%)]/80 space-y-1">
+                              {philosopher1.keyIdeas.map((idea, index) => (
+                                <li key={index}>• {idea}</li>
+                              ))}
+                            </ul>
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-[hsl(40,20%,95%)] mb-1">
+                              Câu Nói Nổi Tiếng:
+                            </h4>
+                            <p className="text-sm text-[hsl(270,60%,80%)] italic">
+                              "{philosopher1.famousQuote}"
+                            </p>
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-[hsl(40,20%,95%)] mb-1">
+                              Tính Cách:
+                            </h4>
+                            <p className="text-sm text-[hsl(40,20%,95%)]/80">
+                              {philosopher1.personality}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Philosopher 2 Info */}
+                      <div className="bg-[hsl(240,45%,8%)]/60 rounded-lg p-4 border border-[hsl(220,70%,55%)]/20">
+                        <div className="flex items-center gap-3 mb-4">
+                          <img
+                            src={philosopher2.avatar}
+                            alt={philosopher2.name}
+                            className="w-12 h-12 rounded-full border-2 border-[hsl(220,70%,55%)]"
+                          />
+                          <div>
+                            <h3 className="font-bold text-[hsl(220,70%,90%)]">
+                              {philosopher2.name}
+                            </h3>
+                            <p className="text-sm text-[hsl(220,70%,70%)]">
+                              {philosopher2.era} • {philosopher2.school}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="space-y-3">
+                          <div>
+                            <h4 className="font-semibold text-[hsl(40,20%,95%)] mb-1">
+                              Bối Cảnh:
+                            </h4>
+                            <p className="text-sm text-[hsl(40,20%,95%)]/80">
+                              {philosopher2.context}
+                            </p>
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-[hsl(40,20%,95%)] mb-1">
+                              Ý Tưởng Chính:
+                            </h4>
+                            <ul className="text-sm text-[hsl(40,20%,95%)]/80 space-y-1">
+                              {philosopher2.keyIdeas.map((idea, index) => (
+                                <li key={index}>• {idea}</li>
+                              ))}
+                            </ul>
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-[hsl(40,20%,95%)] mb-1">
+                              Câu Nói Nổi Tiếng:
+                            </h4>
+                            <p className="text-sm text-[hsl(220,70%,80%)] italic">
+                              "{philosopher2.famousQuote}"
+                            </p>
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-[hsl(40,20%,95%)] mb-1">
+                              Tính Cách:
+                            </h4>
+                            <p className="text-sm text-[hsl(40,20%,95%)]/80">
+                              {philosopher2.personality}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
 
               {/* Philosopher 2 */}
@@ -404,7 +548,7 @@ const PhilosopherDebate = ({
                 onClick={onExit}
                 variant="outline"
                 size="sm"
-                className="border-[hsl(270,60%,50%)]/40 hover:bg-[hsl(270,60%,50%)]/20"
+                className="border-[hsl(270,60%,50%)]/40 hover:bg-[hsl(270,60%,50%)]/20 hover:text-[hsl(40,20%,95%)] hover:border-[hsl(270,60%,50%)]/60"
               >
                 ← Quay lại chọn triết gia
               </Button>
@@ -414,97 +558,99 @@ const PhilosopherDebate = ({
 
         {/* Messages container */}
         <Card className="bg-[hsl(240,45%,8%)]/70 backdrop-blur-xl border-[hsl(270,60%,50%)]/30 mb-4">
-          <div className="p-6 h-[60vh] overflow-y-auto space-y-4">
-            {messages.map((message) => {
-              if (message.speaker === "user") {
+          <ScrollArea className="h-[60vh] p-6">
+            <div className="space-y-4">
+              {messages.map((message) => {
+                if (message.speaker === "user") {
+                  return (
+                    <div key={message.id} className="flex justify-center">
+                      <div className="bg-[hsl(240,45%,10%)]/80 rounded-xl p-4 max-w-2xl border border-[hsl(270,60%,50%)]/20">
+                        <p className="text-[hsl(40,20%,95%)]/90 text-center whitespace-pre-line">
+                          {message.content}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                }
+
+                const isPhil1 = message.speaker === "philosopher1";
+                const phil = isPhil1 ? philosopher1 : philosopher2;
+                const color = isPhil1 ? "hsl(270,60%,60%)" : "hsl(220,70,60%)";
+
                 return (
-                  <div key={message.id} className="flex justify-center">
-                    <div className="bg-[hsl(240,45%,10%)]/80 rounded-xl p-4 max-w-2xl border border-[hsl(270,60%,50%)]/20">
-                      <p className="text-[hsl(40,20%,95%)]/90 text-center whitespace-pre-line">
-                        {message.content}
-                      </p>
+                  <div
+                    key={message.id}
+                    className={`flex ${
+                      isPhil1 ? "justify-start" : "justify-end"
+                    } ${message.isRebuttal ? "animate-slide-in" : ""}`}
+                  >
+                    <div
+                      className={`flex gap-3 max-w-xl ${
+                        isPhil1 ? "" : "flex-row-reverse"
+                      }`}
+                    >
+                      <img
+                        src={phil.avatar}
+                        alt={phil.name}
+                        className="w-10 h-10 rounded-full border-2"
+                        style={{ borderColor: color }}
+                      />
+
+                      <div
+                        className={`rounded-2xl p-4 ${
+                          message.isRebuttal ? "border-2 shadow-lg" : "border"
+                        }`}
+                        style={{
+                          backgroundColor: `${color}15`,
+                          borderColor: `${color}40`,
+                          boxShadow: message.isRebuttal
+                            ? `0 0 20px ${color}30`
+                            : "none",
+                        }}
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <p className="font-bold text-[hsl(40,20%,95%)]">
+                            {phil.name}
+                          </p>
+                          {message.isRebuttal && (
+                            <span className="text-xs px-2 py-1 rounded-full bg-[hsl(270,60%,50%)]/30 text-[hsl(270,60%,80%)]">
+                              Phản biện
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[hsl(40,20%,95%)]/90 leading-relaxed">
+                          {message.content}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 );
-              }
+              })}
 
-              const isPhil1 = message.speaker === "philosopher1";
-              const phil = isPhil1 ? philosopher1 : philosopher2;
-              const color = isPhil1 ? "hsl(270,60%,60%)" : "hsl(220,70,60%)";
-
-              return (
-                <div
-                  key={message.id}
-                  className={`flex ${
-                    isPhil1 ? "justify-start" : "justify-end"
-                  } ${message.isRebuttal ? "animate-slide-in" : ""}`}
-                >
-                  <div
-                    className={`flex gap-3 max-w-xl ${
-                      isPhil1 ? "" : "flex-row-reverse"
-                    }`}
-                  >
-                    <img
-                      src={phil.avatar}
-                      alt={phil.name}
-                      className="w-10 h-10 rounded-full border-2"
-                      style={{ borderColor: color }}
-                    />
-
-                    <div
-                      className={`rounded-2xl p-4 ${
-                        message.isRebuttal ? "border-2 shadow-lg" : "border"
-                      }`}
-                      style={{
-                        backgroundColor: `${color}15`,
-                        borderColor: `${color}40`,
-                        boxShadow: message.isRebuttal
-                          ? `0 0 20px ${color}30`
-                          : "none",
-                      }}
-                    >
-                      <div className="flex items-center gap-2 mb-2">
-                        <p className="font-bold text-[hsl(40,20%,95%)]">
-                          {phil.name}
-                        </p>
-                        {message.isRebuttal && (
-                          <span className="text-xs px-2 py-1 rounded-full bg-[hsl(270,60%,50%)]/30 text-[hsl(270,60%,80%)]">
-                            Phản biện
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-[hsl(40,20%,95%)]/90 leading-relaxed">
-                        {message.content}
-                      </p>
+              {isProcessing && !waitingForUserChoice && (
+                <div className="flex justify-center">
+                  <div className="bg-[hsl(240,45%,10%)]/80 rounded-xl p-4 border border-[hsl(270,60%,50%)]/20">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-[hsl(270,60%,70%)] rounded-full animate-bounce" />
+                      <div
+                        className="w-2 h-2 bg-[hsl(220,70%,65%)] rounded-full animate-bounce"
+                        style={{ animationDelay: "0.1s" }}
+                      />
+                      <div
+                        className="w-2 h-2 bg-[hsl(320,60%,65%)] rounded-full animate-bounce"
+                        style={{ animationDelay: "0.2s" }}
+                      />
+                      <span className="text-[hsl(40,20%,95%)]/70 ml-2">
+                        Triết gia đang suy ngẫm...
+                      </span>
                     </div>
                   </div>
                 </div>
-              );
-            })}
+              )}
 
-            {isProcessing && !waitingForUserChoice && (
-              <div className="flex justify-center">
-                <div className="bg-[hsl(240,45%,10%)]/80 rounded-xl p-4 border border-[hsl(270,60%,50%)]/20">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-[hsl(270,60%,70%)] rounded-full animate-bounce" />
-                    <div
-                      className="w-2 h-2 bg-[hsl(220,70%,65%)] rounded-full animate-bounce"
-                      style={{ animationDelay: "0.1s" }}
-                    />
-                    <div
-                      className="w-2 h-2 bg-[hsl(320,60%,65%)] rounded-full animate-bounce"
-                      style={{ animationDelay: "0.2s" }}
-                    />
-                    <span className="text-[hsl(40,20%,95%)]/70 ml-2">
-                      Triết gia đang suy ngẫm...
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div ref={messagesEndRef} />
-          </div>
+              <div ref={messagesEndRef} />
+            </div>
+          </ScrollArea>
         </Card>
 
         {/* Choice buttons when waiting for user */}

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   TrendingUp,
   TrendingDown,
@@ -840,7 +841,7 @@ const VillageTransformationGame = ({
 
     return (
       <div className="h-screen bg-gradient-to-b from-[hsl(240,45%,6%)] to-[hsl(240,40%,8%)] flex flex-col">
-        <div className="flex-1 flex flex-col p-8 overflow-y-auto">
+        <ScrollArea className="flex-1 p-8">
           <div className="container mx-auto max-w-6xl flex flex-col">
             <Card className="bg-[hsl(240,45%,8%)]/95 backdrop-blur-xl border-[hsl(270,60%,50%)]/40 p-12 flex-1 flex flex-col">
               <div className="text-center space-y-8">
@@ -1066,7 +1067,7 @@ const VillageTransformationGame = ({
                       onClick={onBack}
                       size="lg"
                       variant="outline"
-                      className="border-[hsl(40,20%,95%)]/20 hover:bg-[hsl(40,20%,95%)]/10 px-12 py-6 text-lg"
+                      className="border-[hsl(40,20%,95%)]/50 hover:bg-[hsl(270,60%,50%)]/30 hover:text-white px-12 py-6 text-lg text-[hsl(40,20%,95%)]"
                     >
                       <ArrowLeft className="w-5 h-5 mr-2" />
                       Quay Lại
@@ -1084,7 +1085,7 @@ const VillageTransformationGame = ({
               </div>
             </Card>
           </div>
-        </div>
+        </ScrollArea>
       </div>
     );
   }
@@ -1093,7 +1094,7 @@ const VillageTransformationGame = ({
 
   return (
     <div className="h-screen bg-gradient-to-b from-[hsl(240,45%,6%)] to-[hsl(240,40%,8%)] flex flex-col">
-      <div className="flex-1 flex flex-col p-3 sm:p-6 md:p-8 overflow-y-auto">
+      <ScrollArea className="flex-1 p-3 sm:p-6 md:p-8">
         <div className="container mx-auto max-w-7xl flex flex-col space-y-4 sm:space-y-6">
           {/* Header */}
           <Card className="bg-[hsl(240,45%,8%)]/95 backdrop-blur-xl border-[hsl(270,60%,50%)]/40 p-4 sm:p-5 md:p-6">
@@ -1103,7 +1104,7 @@ const VillageTransformationGame = ({
                   onClick={onBack}
                   variant="outline"
                   size="sm"
-                  className="border-[hsl(40,20%,95%)]/20 hover:bg-[hsl(40,20%,95%)]/10 text-xs sm:text-sm"
+                  className="border-[hsl(40,20%,95%)]/50 hover:bg-[hsl(270,60%,50%)]/30 hover:text-white text-xs sm:text-sm text-[hsl(40,20%,95%)]"
                 >
                   <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                   Quay Lại
@@ -1510,7 +1511,7 @@ const VillageTransformationGame = ({
             </Card>
           )}
         </div>
-      </div>
+      </ScrollArea>
     </div>
   );
 };
