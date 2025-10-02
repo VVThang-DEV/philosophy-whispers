@@ -60,7 +60,7 @@ const PhilosopherDebate = ({
     const welcomeMessage: Message = {
       id: `welcome-${Date.now()}`,
       speaker: "user",
-      content: `🎭 Chào mừng đến với cuộc tranh luận triết học!\n\n${philosopher1.name} (${philosopher1.school}) vs ${philosopher2.name} (${philosopher2.school})\n\nMỗi triết gia có 3 trái tim ❤️. Đặt câu hỏi và chọn quan điểm bạn đồng ý hơn!`,
+      content: `🎭 Chào mừng đến với cuộc tranh luận triết học!\n\n${philosopher1.name} (${philosopher1.school}) vs ${philosopher2.name} (${philosopher2.school})\n\nMỗi triết gia có 2 trái tim ❤️. Đặt câu hỏi và chọn quan điểm bạn đồng ý hơn!`,
       timestamp: Date.now(),
     };
     setMessages([welcomeMessage]);

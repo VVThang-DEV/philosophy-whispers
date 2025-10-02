@@ -240,7 +240,30 @@ export default function PhilosopherChatNew({
 
       {/* Input */}
       <div className="relative z-10 p-3 sm:p-4 border-t border-[hsl(270,60%,50%)]/20 bg-gradient-to-r from-[hsl(270,60%,50%)]/10 via-[hsl(220,70%,55%)]/10 to-[hsl(320,60%,60%)]/10 backdrop-blur-md">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto space-y-3">
+          {/* Suggested Questions - only show when no messages yet */}
+          {messages.length <= 1 && philosopher.suggestedQuestions && (
+            <div className="space-y-2">
+              <p className="text-xs sm:text-sm text-[hsl(270,60%,80%)] font-medium px-2">
+                💬 Câu hỏi gợi ý:
+              </p>
+              <div className="grid gap-2">
+                {philosopher.suggestedQuestions.map((question, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => {
+                      setInput(question);
+                      inputRef.current?.focus();
+                    }}
+                    className="text-left p-3 rounded-xl bg-gradient-to-br from-[hsl(270,60%,50%)]/10 to-[hsl(320,60%,60%)]/10 border border-[hsl(270,60%,50%)]/30 hover:border-[hsl(270,60%,50%)]/50 text-[hsl(40,20%,95%)] text-xs sm:text-sm transition-all duration-200 hover:shadow-[0_0_15px_hsl(270,60%,50%,0.2)] active:scale-[0.98]"
+                  >
+                    {question}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           <Card className="bg-[hsl(240,45%,6%)]/80 border-[hsl(270,60%,50%)]/30 shadow-[0_0_30px_hsl(270,60%,50%,0.2)] backdrop-blur-sm">
             <div className="flex gap-2 p-2">
               <Input
@@ -267,8 +290,8 @@ export default function PhilosopherChatNew({
             </div>
           </Card>
           <p className="text-xs sm:text-sm text-[hsl(270,60%,70%)] mt-2 sm:mt-3 text-center px-2">
-            💡 <span className="font-medium">Gợi ý:</span> Hỏi về tư tưởng,
-            triết lý, hoặc cuộc đời của {philosopher.name.split(" ")[0]}
+            💡 <span className="font-medium">Mẹo:</span> Nhấn vào câu hỏi gợi ý
+            hoặc tự đặt câu hỏi của bạn
           </p>
         </div>
       </div>
