@@ -19,20 +19,43 @@ const Hero = () => {
     <section className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[hsl(240,50%,3%)] via-[hsl(240,45%,6%)] to-[hsl(240,40%,10%)]">
       {/* Starfield effect */}
       <div className="absolute inset-0 overflow-hidden opacity-70">
-        {[...Array(150)].map((_, i) => (
+        {/* Moving stars with rotation and orbit */}
+        {[...Array(100)].map((_, i) => (
           <div
-            key={`star-${i}`}
-            className="absolute w-[1px] h-[1px] bg-white rounded-full"
+            key={`moving-star-${i}`}
+            className="absolute w-[1px] h-[1px] bg-white rounded-full animate-star-rotate"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
               opacity: Math.random() * 0.9,
               animation: `twinkle ${
                 3 + Math.random() * 5
-              }s ease-in-out infinite`,
-              animationDelay: `${Math.random() * 5}s`,
+              }s ease-in-out infinite, star-orbit ${
+                20 + Math.random() * 30
+              }s linear infinite`,
+              animationDelay: `${Math.random() * 5}s, ${Math.random() * 20}s`,
               boxShadow: `0 0 ${Math.random() * 3}px rgba(255,255,255,${
                 Math.random() * 0.5
+              })`,
+              transformOrigin: "center",
+            }}
+          />
+        ))}
+        {/* Still stars */}
+        {[...Array(80)].map((_, i) => (
+          <div
+            key={`still-star-${i}`}
+            className="absolute w-[1px] h-[1px] bg-white rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              opacity: 0.6 + Math.random() * 0.4,
+              animation: `twinkle ${
+                4 + Math.random() * 8
+              }s ease-in-out infinite`,
+              animationDelay: `${Math.random() * 8}s`,
+              boxShadow: `0 0 ${1 + Math.random() * 2}px rgba(255,255,255,${
+                0.3 + Math.random() * 0.4
               })`,
             }}
           />
