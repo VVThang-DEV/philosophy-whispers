@@ -162,6 +162,102 @@ const QuickTimelineStory = ({ onBack }: QuickTimelineStoryProps) => {
         "**Vai trò của thông tin khoa học**: Trong khủng hoảng, người dân cần thông tin chính xác và minh bạch. Khi thấy khoa học giải thích được và có giải pháp thực tế, họ sẽ giảm tin vào giải pháp phi khoa học.",
       statChange: { superstition: -5, literacy: 8 },
     },
+    {
+      year: "2022",
+      title: "Bùng Nổ TikTok & Content Creator",
+      image:
+        "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=1200&h=600&fit=crop",
+      situation:
+        "TikTok thống trị. Xuất hiện nhiều 'thầy' online bán khóa học 'mở khóa tiềm năng', 'hút tài lộc vũ trụ', kiếm hàng tỷ. Nhưng cũng có creator khoa học như Vật Lý Vui, Khoa Học Thú Vị thu hút triệu views.",
+      question: "Làm sao để giới trẻ theo dõi nội dung khoa học hơn?",
+      options: [
+        {
+          text: "Hỗ trợ creator khoa học, làm content hấp dẫn",
+          emoji: "🎬",
+          effect: "positive",
+        },
+        {
+          text: "Chỉ trích những người tin mê tín (tạo đối kháng)",
+          emoji: "😠",
+          effect: "negative",
+        },
+      ],
+      mlnExplanation:
+        "**Văn hóa đại chúng**: Nội dung khoa học cần được đóng gói hấp dẫn để cạnh tranh với mê tín. Chỉ trích không hiệu quả bằng việc tạo ra giá trị thay thế tốt hơn.",
+      statChange: { superstition: -10, literacy: 15 },
+    },
+    {
+      year: "2023",
+      title: "AI Chatbot Và Thông Tin Sai Lệch",
+      image:
+        "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&h=600&fit=crop",
+      situation:
+        "ChatGPT ra đời. Một số người dùng AI để tạo 'bài cúng', 'lời nguyện' tự động. Nhưng cũng có người dùng AI để học khoa học, giải toán. Phân biệt thông tin đúng-sai khó hơn.",
+      question: "AI có thể giúp hoặc hại việc chống mê tín?",
+      options: [
+        {
+          text: "Dạy người dân dùng AI đúng cách, kiểm chứng thông tin",
+          emoji: "🤖",
+          effect: "positive",
+        },
+        {
+          text: "Cấm người dân dùng AI (không thực tế)",
+          emoji: "🚫",
+          effect: "negative",
+        },
+      ],
+      mlnExplanation:
+        "**Công nghệ là công cụ trung lập**: AI có thể lan truyền mê tín hoặc kiến thức khoa học, tùy cách sử dụng. Giáo dục về AI literacy giúp người dân dùng công nghệ đúng hướng.",
+      statChange: { superstition: -8, literacy: 12 },
+    },
+    {
+      year: "2024",
+      title: "Gen Z Và Chuyển Biến Nhận Thức",
+      image:
+        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&h=600&fit=crop",
+      situation:
+        "Thế hệ Z lớn lên với internet, có xu hướng hoài nghi hơn với mê tín. Nhưng vẫn có một bộ phận tin vào cung hoàng đạo, MBTI như 'khoa học'. Cần giáo dục phê phán hơn.",
+      question: "Làm sao để thế hệ trẻ phân biệt khoa học giả?",
+      options: [
+        {
+          text: "Dạy phương pháp khoa học trong trường học",
+          emoji: "🔬",
+          effect: "positive",
+        },
+        {
+          text: "Tin rằng Gen Z tự khắc hiểu (không can thiệp)",
+          emoji: "🤷",
+          effect: "negative",
+        },
+      ],
+      mlnExplanation:
+        "**Giáo dục phương pháp luận**: Không đủ để biết sự thật, cần biết cách tìm ra sự thật. Dạy phương pháp khoa học giúp nhận diện pseudoscience (khoa học giả).",
+      statChange: { superstition: -12, literacy: 18 },
+    },
+    {
+      year: "2025",
+      title: "Xã Hội Tri Thức - Thành Quả Và Thách Thức",
+      image:
+        "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&h=600&fit=crop",
+      situation:
+        "Đa số người dân có truy cập internet, giáo dục phổ cập. Mê tín giảm mạnh nhưng vẫn tồn tại ở những vùng khó khăn và trong lúc khủng hoảng. Cần nỗ lực liên tục để duy trì tiến bộ.",
+      question: "Để xã hội không thoái bộ về mê tín, cần gì?",
+      options: [
+        {
+          text: "Đầu tư giáo dục liên tục + giảm bất bình đẳng",
+          emoji: "🎓",
+          effect: "positive",
+        },
+        {
+          text: "Cho rằng đã thành công, không cần làm gì thêm",
+          emoji: "😌",
+          effect: "negative",
+        },
+      ],
+      mlnExplanation:
+        "**Tiến bộ không tự nhiên mà đến**: Mê tín có thể tái xuất hiện khi điều kiện xã hội xấu đi. Cần duy trì đầu tư vào giáo dục và phúc lợi xã hội để bảo vệ thành quả.",
+      statChange: { superstition: -10, literacy: 15 },
+    },
   ];
 
   const currentEvent = events[currentEventIndex];
@@ -220,287 +316,291 @@ const QuickTimelineStory = ({ onBack }: QuickTimelineStoryProps) => {
 
   if (isComplete) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[hsl(240,45%,6%)] to-[hsl(240,40%,8%)] p-3 sm:p-6 md:p-8">
-        <div className="container mx-auto max-w-4xl">
-          <Card className="bg-[hsl(240,45%,8%)]/95 backdrop-blur-xl border-[hsl(140,60%,50%)]/40 overflow-hidden">
-            <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden">
-              <img
-                src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1200&h=600&fit=crop"
-                alt="Completed"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[hsl(240,45%,8%)] via-[hsl(240,45%,8%)]/80 to-transparent flex items-center justify-center">
-                <div className="text-center px-4">
-                  <CheckCircle2 className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 text-[hsl(140,60%,60%)] mx-auto mb-3 sm:mb-4 animate-pulse" />
-                  <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-[hsl(40,20%,95%)]">
-                    Hoàn Thành!
-                  </h1>
+      <div className="h-screen bg-gradient-to-b from-[hsl(240,45%,6%)] to-[hsl(240,40%,8%)] flex flex-col">
+        <div className="flex-1 flex flex-col p-3 sm:p-6 md:p-8 overflow-y-auto">
+          <div className="container mx-auto max-w-4xl flex flex-col">
+            <Card className="bg-[hsl(240,45%,8%)]/95 backdrop-blur-xl border-[hsl(140,60%,50%)]/40 overflow-hidden flex flex-col">
+              <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1200&h=600&fit=crop"
+                  alt="Completed"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[hsl(240,45%,8%)] via-[hsl(240,45%,8%)]/80 to-transparent flex items-center justify-center">
+                  <div className="text-center px-4">
+                    <CheckCircle2 className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 text-[hsl(140,60%,60%)] mx-auto mb-3 sm:mb-4 animate-pulse" />
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-[hsl(40,20%,95%)]">
+                      Hoàn Thành!
+                    </h1>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="p-4 sm:p-6 md:p-8">
-              <h2 className="text-2xl sm:text-3xl font-bold text-[hsl(40,20%,95%)] mb-4 sm:mb-6">
-                Kết Quả Của Bạn
-              </h2>
+              <div className="p-4 sm:p-6 md:p-8">
+                <h2 className="text-2xl sm:text-3xl font-bold text-[hsl(40,20%,95%)] mb-4 sm:mb-6">
+                  Kết Quả Của Bạn
+                </h2>
 
-              <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
-                <Card className="bg-[hsl(240,40%,10%)] border-[hsl(0,70%,60%)]/30 p-4 sm:p-6">
-                  <div className="flex items-center justify-between mb-3 sm:mb-4">
-                    <div className="flex items-center gap-2">
-                      <TrendingDown className="w-5 h-5 sm:w-6 sm:h-6 text-[hsl(0,70%,65%)]" />
-                      <h3 className="text-base sm:text-xl font-bold text-[hsl(40,20%,95%)]">
-                        Tỷ Lệ Mê Tín
-                      </h3>
+                <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                  <Card className="bg-[hsl(240,40%,10%)] border-[hsl(0,70%,60%)]/30 p-4 sm:p-6">
+                    <div className="flex items-center justify-between mb-3 sm:mb-4">
+                      <div className="flex items-center gap-2">
+                        <TrendingDown className="w-5 h-5 sm:w-6 sm:h-6 text-[hsl(0,70%,65%)]" />
+                        <h3 className="text-base sm:text-xl font-bold text-[hsl(40,20%,95%)]">
+                          Tỷ Lệ Mê Tín
+                        </h3>
+                      </div>
+                      <span className="text-2xl sm:text-3xl font-black text-[hsl(0,70%,65%)]">
+                        {totalSuperstition.toFixed(0)}%
+                      </span>
                     </div>
-                    <span className="text-2xl sm:text-3xl font-black text-[hsl(0,70%,65%)]">
-                      {totalSuperstition.toFixed(0)}%
-                    </span>
-                  </div>
-                  <div className="w-full bg-[hsl(240,40%,15%)] rounded-full h-3 sm:h-4 overflow-hidden">
-                    <div
-                      className="bg-gradient-to-r from-[hsl(0,70%,60%)] to-[hsl(0,70%,50%)] h-full rounded-full transition-all duration-1000"
-                      style={{ width: `${totalSuperstition}%` }}
-                    />
+                    <div className="w-full bg-[hsl(240,40%,15%)] rounded-full h-3 sm:h-4 overflow-hidden">
+                      <div
+                        className="bg-gradient-to-r from-[hsl(0,70%,60%)] to-[hsl(0,70%,50%)] h-full rounded-full transition-all duration-1000"
+                        style={{ width: `${totalSuperstition}%` }}
+                      />
+                    </div>
+                  </Card>
+
+                  <Card className="bg-[hsl(240,40%,10%)] border-[hsl(220,70%,60%)]/30 p-4 sm:p-6">
+                    <div className="flex items-center justify-between mb-3 sm:mb-4">
+                      <div className="flex items-center gap-2">
+                        <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-[hsl(220,70%,65%)]" />
+                        <h3 className="text-base sm:text-xl font-bold text-[hsl(40,20%,95%)]">
+                          Tỷ Lệ Giáo Dục
+                        </h3>
+                      </div>
+                      <span className="text-2xl sm:text-3xl font-black text-[hsl(220,70%,65%)]">
+                        {totalLiteracy.toFixed(0)}%
+                      </span>
+                    </div>
+                    <div className="w-full bg-[hsl(240,40%,15%)] rounded-full h-3 sm:h-4 overflow-hidden">
+                      <div
+                        className="bg-gradient-to-r from-[hsl(220,70%,60%)] to-[hsl(220,70%,50%)] h-full rounded-full transition-all duration-1000"
+                        style={{ width: `${totalLiteracy}%` }}
+                      />
+                    </div>
+                  </Card>
+                </div>
+
+                <Card className="bg-[hsl(270,60%,50%)]/10 border-[hsl(270,60%,50%)]/30 p-4 sm:p-6 mb-4 sm:mb-6">
+                  <h3 className="text-xl sm:text-2xl font-bold text-[hsl(270,60%,75%)] mb-3 sm:mb-4 flex items-center gap-2">
+                    <Book className="w-5 h-5 sm:w-6 sm:h-6" />
+                    Phân Tích Duy Vật Lịch Sử
+                  </h3>
+                  <div className="space-y-3 sm:space-y-4 text-sm sm:text-base text-[hsl(40,20%,95%)]/80 leading-relaxed">
+                    <p>
+                      <strong className="text-[hsl(270,60%,75%)]">
+                        1. Tồn tại xã hội quyết định ý thức xã hội:
+                      </strong>{" "}
+                      Qua 30 năm lịch sử, ta thấy rõ khi điều kiện vật chất được
+                      cải thiện (y tế, giáo dục, việc làm), mức độ mê tín giảm
+                      xuống. Đây là minh chứng cho nguyên lý cơ bản của chủ
+                      nghĩa duy vật.
+                    </p>
+                    <p>
+                      <strong className="text-[hsl(220,70%,70%)]">
+                        2. Vai trò của giáo dục:
+                      </strong>{" "}
+                      Giáo dục không chỉ truyền đạt kiến thức mà còn hình thành
+                      tư duy phản biện, giúp người dân tự phân tích và nhận diện
+                      thông tin sai lệch.
+                    </p>
+                    <p>
+                      <strong className="text-[hsl(140,60%,60%)]">
+                        3. Ảnh hưởng của khủng hoảng:
+                      </strong>{" "}
+                      Trong thời kỳ khó khăn (1990, 2015, 2020), người dân có xu
+                      hướng tìm kiếm giải pháp tâm linh khi thiếu giải pháp vật
+                      chất. Đây là phản ứng tự nhiên của ý thức khi tồn tại xã
+                      hội bấp bênh.
+                    </p>
+                    <p>
+                      <strong className="text-[hsl(0,70%,65%)]">
+                        4. Tâm lý đám đông:
+                      </strong>{" "}
+                      Mạng xã hội khuếch đại cả thông tin tốt lẫn xấu. Khi thiếu
+                      tư duy phản biện, người dân dễ bị cuốn theo trào lưu mê
+                      tín tập thể.
+                    </p>
                   </div>
                 </Card>
 
-                <Card className="bg-[hsl(240,40%,10%)] border-[hsl(220,70%,60%)]/30 p-4 sm:p-6">
-                  <div className="flex items-center justify-between mb-3 sm:mb-4">
-                    <div className="flex items-center gap-2">
-                      <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-[hsl(220,70%,65%)]" />
-                      <h3 className="text-base sm:text-xl font-bold text-[hsl(40,20%,95%)]">
-                        Tỷ Lệ Giáo Dục
-                      </h3>
-                    </div>
-                    <span className="text-2xl sm:text-3xl font-black text-[hsl(220,70%,65%)]">
-                      {totalLiteracy.toFixed(0)}%
-                    </span>
-                  </div>
-                  <div className="w-full bg-[hsl(240,40%,15%)] rounded-full h-3 sm:h-4 overflow-hidden">
-                    <div
-                      className="bg-gradient-to-r from-[hsl(220,70%,60%)] to-[hsl(220,70%,50%)] h-full rounded-full transition-all duration-1000"
-                      style={{ width: `${totalLiteracy}%` }}
-                    />
-                  </div>
-                </Card>
-              </div>
-
-              <Card className="bg-[hsl(270,60%,50%)]/10 border-[hsl(270,60%,50%)]/30 p-4 sm:p-6 mb-4 sm:mb-6">
-                <h3 className="text-xl sm:text-2xl font-bold text-[hsl(270,60%,75%)] mb-3 sm:mb-4 flex items-center gap-2">
-                  <Book className="w-5 h-5 sm:w-6 sm:h-6" />
-                  Phân Tích Duy Vật Lịch Sử
-                </h3>
-                <div className="space-y-3 sm:space-y-4 text-sm sm:text-base text-[hsl(40,20%,95%)]/80 leading-relaxed">
-                  <p>
-                    <strong className="text-[hsl(270,60%,75%)]">
-                      1. Tồn tại xã hội quyết định ý thức xã hội:
-                    </strong>{" "}
-                    Qua 30 năm lịch sử, ta thấy rõ khi điều kiện vật chất được
-                    cải thiện (y tế, giáo dục, việc làm), mức độ mê tín giảm
-                    xuống. Đây là minh chứng cho nguyên lý cơ bản của chủ nghĩa
-                    duy vật.
-                  </p>
-                  <p>
-                    <strong className="text-[hsl(220,70%,70%)]">
-                      2. Vai trò của giáo dục:
-                    </strong>{" "}
-                    Giáo dục không chỉ truyền đạt kiến thức mà còn hình thành tư
-                    duy phản biện, giúp người dân tự phân tích và nhận diện
-                    thông tin sai lệch.
-                  </p>
-                  <p>
-                    <strong className="text-[hsl(140,60%,60%)]">
-                      3. Ảnh hưởng của khủng hoảng:
-                    </strong>{" "}
-                    Trong thời kỳ khó khăn (1990, 2015, 2020), người dân có xu
-                    hướng tìm kiếm giải pháp tâm linh khi thiếu giải pháp vật
-                    chất. Đây là phản ứng tự nhiên của ý thức khi tồn tại xã hội
-                    bấp bênh.
-                  </p>
-                  <p>
-                    <strong className="text-[hsl(0,70%,65%)]">
-                      4. Tâm lý đám đông:
-                    </strong>{" "}
-                    Mạng xã hội khuếch đại cả thông tin tốt lẫn xấu. Khi thiếu
-                    tư duy phản biện, người dân dễ bị cuốn theo trào lưu mê tín
-                    tập thể.
-                  </p>
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                  <Button
+                    onClick={onBack}
+                    variant="outline"
+                    className="flex-1 border-[hsl(40,20%,95%)]/20 hover:bg-[hsl(40,20%,95%)]/10 py-5 sm:py-6"
+                  >
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    Quay Lại
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setCurrentEventIndex(0);
+                      setSelectedChoices([]);
+                      setShowExplanation(false);
+                      setTotalSuperstition(80);
+                      setTotalLiteracy(20);
+                      setIsComplete(false);
+                    }}
+                    className="flex-1 bg-gradient-to-r from-[hsl(270,60%,50%)] to-[hsl(220,70%,55%)] hover:from-[hsl(270,60%,60%)] hover:to-[hsl(220,70%,65%)] py-5 sm:py-6"
+                  >
+                    Chơi Lại
+                  </Button>
                 </div>
-              </Card>
-
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                <Button
-                  onClick={onBack}
-                  variant="outline"
-                  className="flex-1 border-[hsl(40,20%,95%)]/20 hover:bg-[hsl(40,20%,95%)]/10 py-5 sm:py-6"
-                >
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Quay Lại
-                </Button>
-                <Button
-                  onClick={() => {
-                    setCurrentEventIndex(0);
-                    setSelectedChoices([]);
-                    setShowExplanation(false);
-                    setTotalSuperstition(80);
-                    setTotalLiteracy(20);
-                    setIsComplete(false);
-                  }}
-                  className="flex-1 bg-gradient-to-r from-[hsl(270,60%,50%)] to-[hsl(220,70%,55%)] hover:from-[hsl(270,60%,60%)] hover:to-[hsl(220,70%,65%)] py-5 sm:py-6"
-                >
-                  Chơi Lại
-                </Button>
               </div>
-            </div>
-          </Card>
+            </Card>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[hsl(240,45%,6%)] to-[hsl(240,40%,8%)] p-3 sm:p-6 md:p-8">
-      <div className="container mx-auto max-w-5xl">
-        {/* Progress Bar */}
-        <div className="mb-4 sm:mb-6">
-          <div className="flex justify-between items-center mb-2">
-            <Button
-              onClick={onBack}
-              variant="outline"
-              size="sm"
-              className="border-[hsl(40,20%,95%)]/20 hover:bg-[hsl(40,20%,95%)]/10 text-xs sm:text-sm"
-            >
-              <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-              Quay Lại
-            </Button>
-            <span className="text-xs sm:text-sm text-[hsl(40,20%,95%)]/60">
-              {currentEventIndex + 1} / {events.length}
-            </span>
+    <div className="h-screen bg-gradient-to-b from-[hsl(240,45%,6%)] to-[hsl(240,40%,8%)] flex flex-col">
+      <div className="flex-1 flex flex-col p-3 sm:p-6 md:p-8 overflow-y-auto">
+        <div className="container mx-auto max-w-5xl flex flex-col">
+          {/* Progress Bar */}
+          <div className="mb-4 sm:mb-6">
+            <div className="flex justify-between items-center mb-2">
+              <Button
+                onClick={onBack}
+                variant="outline"
+                size="sm"
+                className="border-[hsl(40,20%,95%)]/20 hover:bg-[hsl(40,20%,95%)]/10 text-xs sm:text-sm"
+              >
+                <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                Quay Lại
+              </Button>
+              <span className="text-xs sm:text-sm text-[hsl(40,20%,95%)]/60">
+                {currentEventIndex + 1} / {events.length}
+              </span>
+            </div>
+            <div className="w-full bg-[hsl(240,40%,15%)] rounded-full h-1.5 sm:h-2 overflow-hidden">
+              <div
+                className="bg-gradient-to-r from-[hsl(270,60%,50%)] to-[hsl(220,70%,55%)] h-full rounded-full transition-all duration-500"
+                style={{
+                  width: `${((currentEventIndex + 1) / events.length) * 100}%`,
+                }}
+              />
+            </div>
           </div>
-          <div className="w-full bg-[hsl(240,40%,15%)] rounded-full h-1.5 sm:h-2 overflow-hidden">
-            <div
-              className="bg-gradient-to-r from-[hsl(270,60%,50%)] to-[hsl(220,70%,55%)] h-full rounded-full transition-all duration-500"
-              style={{
-                width: `${((currentEventIndex + 1) / events.length) * 100}%`,
-              }}
-            />
-          </div>
-        </div>
 
-        {/* Main Event Card */}
-        <Card className="event-card bg-[hsl(240,45%,8%)]/95 backdrop-blur-xl border-[hsl(270,60%,50%)]/40 overflow-hidden transition-all duration-300">
-          {/* Hero Image */}
-          <div className="relative h-48 sm:h-64 md:h-80 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-[hsl(270,60%,50%)]/10 animate-pulse" />
-            <img
-              src={currentEvent.image}
-              alt={currentEvent.title}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[hsl(240,45%,8%)] via-[hsl(240,45%,8%)]/60 to-transparent" />
-            <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4">
-              <div className="inline-block bg-[hsl(270,60%,50%)]/80 backdrop-blur-sm px-2 py-0.5 sm:px-3 sm:py-1 rounded-full mb-1 sm:mb-2">
-                <span className="text-white text-xs sm:text-sm font-semibold">
-                  {currentEvent.year}
-                </span>
+          {/* Main Event Card */}
+          <Card className="event-card bg-[hsl(240,45%,8%)]/95 backdrop-blur-xl border-[hsl(270,60%,50%)]/40 overflow-hidden transition-all duration-300">
+            {/* Hero Image */}
+            <div className="relative h-48 sm:h-64 md:h-80 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-[hsl(270,60%,50%)]/10 animate-pulse" />
+              <img
+                src={currentEvent.image}
+                alt={currentEvent.title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[hsl(240,45%,8%)] via-[hsl(240,45%,8%)]/60 to-transparent" />
+              <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4">
+                <div className="inline-block bg-[hsl(270,60%,50%)]/80 backdrop-blur-sm px-2 py-0.5 sm:px-3 sm:py-1 rounded-full mb-1 sm:mb-2">
+                  <span className="text-white text-xs sm:text-sm font-semibold">
+                    {currentEvent.year}
+                  </span>
+                </div>
+                <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-[hsl(40,20%,95%)] drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]">
+                  {currentEvent.title}
+                </h2>
               </div>
-              <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-[hsl(40,20%,95%)] drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]">
-                {currentEvent.title}
-              </h2>
-            </div>
-          </div>
-
-          <div className="p-4 sm:p-6 md:p-8">
-            {/* Stats Display */}
-            <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
-              <Card className="bg-[hsl(0,70%,60%)]/10 border-[hsl(0,70%,60%)]/30 p-3 sm:p-4">
-                <div className="text-xs sm:text-sm text-[hsl(40,20%,95%)]/60 mb-1">
-                  Mê Tín
-                </div>
-                <div className="text-2xl sm:text-3xl font-black text-[hsl(0,70%,65%)]">
-                  {totalSuperstition.toFixed(0)}%
-                </div>
-              </Card>
-              <Card className="bg-[hsl(220,70%,60%)]/10 border-[hsl(220,70%,60%)]/30 p-3 sm:p-4">
-                <div className="text-xs sm:text-sm text-[hsl(40,20%,95%)]/60 mb-1">
-                  Giáo Dục
-                </div>
-                <div className="text-2xl sm:text-3xl font-black text-[hsl(220,70%,65%)]">
-                  {totalLiteracy.toFixed(0)}%
-                </div>
-              </Card>
             </div>
 
-            {/* Situation - Always visible */}
-            <Card className="bg-[hsl(240,40%,10%)] border-[hsl(270,60%,50%)]/20 p-4 sm:p-6 mb-4 sm:mb-6">
-              <h3 className="text-lg sm:text-xl font-bold text-[hsl(270,60%,75%)] mb-2 sm:mb-3">
-                Tình Huống
-              </h3>
-              <p className="text-sm sm:text-base text-[hsl(40,20%,95%)]/80 leading-relaxed">
-                {currentEvent.situation}
-              </p>
-            </Card>
-
-            {/* Fixed height container for smooth transition */}
-            <div className="min-h-[280px] sm:min-h-[320px] relative">
-              {!showExplanation ? (
-                <div className="slide-up">
-                  {/* Question */}
-                  <h3 className="text-xl sm:text-2xl font-bold text-[hsl(40,20%,95%)] mb-3 sm:mb-4">
-                    {currentEvent.question}
-                  </h3>
-
-                  {/* Options */}
-                  <div className="space-y-3 sm:space-y-4">
-                    {currentEvent.options.map((option, index) => (
-                      <Button
-                        key={index}
-                        onClick={() => handleChoice(index)}
-                        style={{ animationDelay: `${index * 100}ms` }}
-                        className={`w-full text-left justify-start h-auto p-4 sm:p-6 opacity-0 slide-up transition-all duration-300 ${
-                          option.effect === "positive"
-                            ? "bg-gradient-to-r from-[hsl(140,60%,40%)]/20 to-[hsl(140,60%,40%)]/10 border-[hsl(140,60%,50%)]/40 hover:border-[hsl(140,60%,50%)]/60 hover:shadow-[0_0_20px_hsl(140,60%,50%,0.3)] active:scale-95"
-                            : "bg-gradient-to-r from-[hsl(0,70%,50%)]/20 to-[hsl(0,70%,50%)]/10 border-[hsl(0,70%,60%)]/40 hover:border-[hsl(0,70%,60%)]/60 hover:shadow-[0_0_20px_hsl(0,70%,60%,0.3)] active:scale-95"
-                        }`}
-                        variant="outline"
-                      >
-                        <span className="text-3xl sm:text-4xl mr-3 sm:mr-4 transition-transform group-hover:scale-110">
-                          {option.emoji}
-                        </span>
-                        <span className="text-base sm:text-lg text-[hsl(40,20%,95%)]">
-                          {option.text}
-                        </span>
-                      </Button>
-                    ))}
+            <div className="p-4 sm:p-6 md:p-8">
+              {/* Stats Display */}
+              <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
+                <Card className="bg-[hsl(0,70%,60%)]/10 border-[hsl(0,70%,60%)]/30 p-3 sm:p-4">
+                  <div className="text-xs sm:text-sm text-[hsl(40,20%,95%)]/60 mb-1">
+                    Mê Tín
                   </div>
-                </div>
-              ) : (
-                <div className="zoom-in">
-                  {/* Explanation */}
-                  <Card className="bg-[hsl(270,60%,50%)]/10 border-[hsl(270,60%,50%)]/30 p-4 sm:p-6 mb-4 sm:mb-6 transition-all duration-300 hover:border-[hsl(270,60%,50%)]/50 hover:shadow-[0_0_30px_hsl(270,60%,50%,0.2)]">
-                    <h3 className="text-lg sm:text-xl font-bold text-[hsl(270,60%,75%)] mb-2 sm:mb-3 flex items-center gap-2">
-                      <Book className="w-4 h-4 sm:w-5 sm:h-5 animate-pulse" />
-                      Giải Thích MLN
-                    </h3>
-                    <p className="text-sm sm:text-base text-[hsl(40,20%,95%)]/80 leading-relaxed">
-                      {currentEvent.mlnExplanation}
-                    </p>
-                  </Card>
+                  <div className="text-2xl sm:text-3xl font-black text-[hsl(0,70%,65%)]">
+                    {totalSuperstition.toFixed(0)}%
+                  </div>
+                </Card>
+                <Card className="bg-[hsl(220,70%,60%)]/10 border-[hsl(220,70%,60%)]/30 p-3 sm:p-4">
+                  <div className="text-xs sm:text-sm text-[hsl(40,20%,95%)]/60 mb-1">
+                    Giáo Dục
+                  </div>
+                  <div className="text-2xl sm:text-3xl font-black text-[hsl(220,70%,65%)]">
+                    {totalLiteracy.toFixed(0)}%
+                  </div>
+                </Card>
+              </div>
 
-                  {/* Next Button */}
-                  <Button
-                    onClick={handleNext}
-                    className="w-full bg-gradient-to-r from-[hsl(270,60%,50%)] to-[hsl(220,70%,55%)] hover:from-[hsl(270,60%,60%)] hover:to-[hsl(220,70%,65%)] hover:shadow-[0_0_30px_hsl(270,60%,50%,0.4)] active:scale-95 py-5 sm:py-6 text-base sm:text-lg transition-all duration-300"
-                  >
-                    {isLastEvent ? "Xem Kết Quả" : "Tiếp Theo"}
-                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
-                  </Button>
-                </div>
-              )}
+              {/* Situation - Always visible */}
+              <Card className="bg-[hsl(240,40%,10%)] border-[hsl(270,60%,50%)]/20 p-4 sm:p-6 mb-4 sm:mb-6">
+                <h3 className="text-lg sm:text-xl font-bold text-[hsl(270,60%,75%)] mb-2 sm:mb-3">
+                  Tình Huống
+                </h3>
+                <p className="text-sm sm:text-base text-[hsl(40,20%,95%)]/80 leading-relaxed">
+                  {currentEvent.situation}
+                </p>
+              </Card>
+
+              {/* Fixed height container for smooth transition */}
+              <div className="min-h-[280px] sm:min-h-[320px] relative">
+                {!showExplanation ? (
+                  <div className="slide-up">
+                    {/* Question */}
+                    <h3 className="text-xl sm:text-2xl font-bold text-[hsl(40,20%,95%)] mb-3 sm:mb-4">
+                      {currentEvent.question}
+                    </h3>
+
+                    {/* Options */}
+                    <div className="space-y-3 sm:space-y-4">
+                      {currentEvent.options.map((option, index) => (
+                        <Button
+                          key={index}
+                          onClick={() => handleChoice(index)}
+                          style={{ animationDelay: `${index * 100}ms` }}
+                          className={`w-full text-left justify-start h-auto p-4 sm:p-6 opacity-0 slide-up transition-all duration-300 ${
+                            option.effect === "positive"
+                              ? "bg-gradient-to-r from-[hsl(140,60%,40%)]/20 to-[hsl(140,60%,40%)]/10 border-[hsl(140,60%,50%)]/40 hover:border-[hsl(140,60%,50%)]/60 hover:shadow-[0_0_20px_hsl(140,60%,50%,0.3)] active:scale-95"
+                              : "bg-gradient-to-r from-[hsl(0,70%,50%)]/20 to-[hsl(0,70%,50%)]/10 border-[hsl(0,70%,60%)]/40 hover:border-[hsl(0,70%,60%)]/60 hover:shadow-[0_0_20px_hsl(0,70%,60%,0.3)] active:scale-95"
+                          }`}
+                          variant="outline"
+                        >
+                          <span className="text-3xl sm:text-4xl mr-3 sm:mr-4 transition-transform group-hover:scale-110">
+                            {option.emoji}
+                          </span>
+                          <span className="text-base sm:text-lg text-[hsl(40,20%,95%)]">
+                            {option.text}
+                          </span>
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="zoom-in">
+                    {/* Explanation */}
+                    <Card className="bg-[hsl(270,60%,50%)]/10 border-[hsl(270,60%,50%)]/30 p-4 sm:p-6 mb-4 sm:mb-6 transition-all duration-300 hover:border-[hsl(270,60%,50%)]/50 hover:shadow-[0_0_30px_hsl(270,60%,50%,0.2)]">
+                      <h3 className="text-lg sm:text-xl font-bold text-[hsl(270,60%,75%)] mb-2 sm:mb-3 flex items-center gap-2">
+                        <Book className="w-4 h-4 sm:w-5 sm:h-5 animate-pulse" />
+                        Giải Thích MLN
+                      </h3>
+                      <p className="text-sm sm:text-base text-[hsl(40,20%,95%)]/80 leading-relaxed">
+                        {currentEvent.mlnExplanation}
+                      </p>
+                    </Card>
+
+                    {/* Next Button */}
+                    <Button
+                      onClick={handleNext}
+                      className="w-full bg-gradient-to-r from-[hsl(270,60%,50%)] to-[hsl(220,70%,55%)] hover:from-[hsl(270,60%,60%)] hover:to-[hsl(220,70%,65%)] hover:shadow-[0_0_30px_hsl(270,60%,50%,0.4)] active:scale-95 py-5 sm:py-6 text-base sm:text-lg transition-all duration-300"
+                    >
+                      {isLastEvent ? "Xem Kết Quả" : "Tiếp Theo"}
+                      <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
+                    </Button>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        </Card>
+          </Card>
+        </div>
       </div>
     </div>
   );

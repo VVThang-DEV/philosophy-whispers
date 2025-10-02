@@ -1,26 +1,14 @@
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Clock, Zap, TrendingUp, Brain, Sparkles } from "lucide-react";
-import VillageTransformationGame from "./VillageTransformationGame";
-import QuickTimelineStory from "./QuickTimelineStory";
-
-type GameMode = "selection" | "quick" | "full";
 
 const InteractiveMLNExperience = () => {
-  const [mode, setMode] = useState<GameMode>("selection");
-
-  if (mode === "quick") {
-    return <QuickTimelineStory onBack={() => setMode("selection")} />;
-  }
-
-  if (mode === "full") {
-    return <VillageTransformationGame onBack={() => setMode("selection")} />;
-  }
+  const navigate = useNavigate();
 
   // Mode selection screen
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[hsl(240,45%,6%)] to-[hsl(240,40%,8%)] p-4 sm:p-6 md:p-8 flex items-center justify-center">
+    <div className=" p-4 sm:p-6 md:p-8 flex items-center justify-center">
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-8 sm:mb-10 md:mb-12 px-2">
           <div className="inline-block mb-4 sm:mb-6">
@@ -109,7 +97,7 @@ const InteractiveMLNExperience = () => {
               </div>
 
               <Button
-                onClick={() => setMode("quick")}
+                onClick={() => navigate("/quick-timeline")}
                 className="w-full bg-gradient-to-r from-[hsl(270,60%,50%)] to-[hsl(220,70%,55%)] hover:from-[hsl(270,60%,60%)] hover:to-[hsl(220,70%,65%)] active:scale-95 text-white font-bold py-5 sm:py-6 text-base sm:text-lg group-hover:shadow-[0_0_30px_hsl(270,60%,50%,0.4)] transition-all"
               >
                 <Zap className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
@@ -191,7 +179,7 @@ const InteractiveMLNExperience = () => {
               </div>
 
               <Button
-                onClick={() => setMode("full")}
+                onClick={() => navigate("/village-game")}
                 className="w-full bg-gradient-to-r from-[hsl(220,70%,55%)] to-[hsl(190,80%,60%)] hover:from-[hsl(220,70%,65%)] hover:to-[hsl(190,80%,70%)] active:scale-95 text-white font-bold py-5 sm:py-6 text-base sm:text-lg group-hover:shadow-[0_0_30px_hsl(220,70%,55%,0.4)] transition-all"
               >
                 <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
