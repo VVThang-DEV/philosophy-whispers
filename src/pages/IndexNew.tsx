@@ -6,9 +6,40 @@ import { philosophers } from "@/data/philosophers";
 import type { Philosopher } from "@/data/philosophers";
 import { useNavigate } from "react-router-dom";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { useEffect } from "react";
 
 const Index = () => {
   const navigate = useNavigate();
+
+  // Handle scrolling to hash on mount
+  useEffect(() => {
+    const scrollToHash = () => {
+      const hash = window.location.hash;
+      if (hash) {
+        const element = document.getElementById(hash.substring(1));
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "center" });
+          // Remove hash from URL after scrolling
+          setTimeout(() => {
+            window.history.replaceState(null, "", window.location.pathname);
+          }, 100);
+        }
+      }
+    };
+
+    // Try scrolling multiple times to handle different loading states
+    scrollToHash();
+    setTimeout(scrollToHash, 500);
+    setTimeout(() => {
+      scrollToHash();
+      // Final attempt to remove hash
+      setTimeout(() => {
+        if (window.location.hash) {
+          window.history.replaceState(null, "", window.location.pathname);
+        }
+      }, 2000);
+    }, 1500);
+  }, []);
 
   // Scroll animation hooks for different sections
   const sphereGalleryAnim = useScrollAnimation(0.2);
@@ -32,6 +63,7 @@ const Index = () => {
 
       {/* 3D Sphere Gallery Section with smooth transition */}
       <section
+        id="sphere"
         ref={sphereGalleryAnim.ref}
         className={`min-h-screen py-24 relative bg-gradient-to-b from-[hsl(240,40%,10%)] via-[hsl(240,45%,6%)] to-[hsl(240,40%,8%)] transition-all duration-1000 ${
           sphereGalleryAnim.isVisible
@@ -149,6 +181,7 @@ const Index = () => {
 
       {/* Interactive Story Analysis Section */}
       <section
+        id="interactive"
         ref={interactiveExperienceAnim.ref}
         className={`py-24 px-4 relative bg-gradient-to-b from-[hsl(240,40%,8%)] via-[hsl(240,45%,6%)] to-[hsl(240,50%,4%)] transition-all duration-1000 ${
           interactiveExperienceAnim.isVisible

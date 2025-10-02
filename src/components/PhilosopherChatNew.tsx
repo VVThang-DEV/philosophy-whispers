@@ -184,7 +184,7 @@ export default function PhilosopherChatNew({
                     <Info className="w-4 h-4" />
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="bg-[hsl(240,45%,6%)] border-[hsl(270,60%,50%)]/30 text-[hsl(40,20%,95%)] max-w-2xl max-h-[80vh] overflow-y-auto">
+                <DialogContent className="bg-[hsl(240,45%,6%)] border-[hsl(270,60%,50%)]/30 text-[hsl(40,20%,95%)] max-w-2xl max-h-[80vh] overflow-y-auto [&>button]:text-[hsl(270,60%,75%)] [&>button]:hover:text-[hsl(270,60%,85%)] [&>button]:hover:bg-transparent [&>button]:focus:ring-0 [&>button]:focus:ring-offset-0 [&>button]:focus:outline-none">
                   <DialogHeader>
                     <DialogTitle className="text-2xl font-bold text-[hsl(270,60%,90%)] flex items-center gap-2">
                       {philosopher.name}

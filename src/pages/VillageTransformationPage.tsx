@@ -4,7 +4,7 @@ import VillageTransformationGame from "../components/VillageTransformationGame";
 const VillageTransformationPage = () => {
   const navigate = useNavigate();
 
-  return <VillageTransformationGame onBack={() => navigate("/")} />;
+  return <VillageTransformationGame onBack={() => navigate("/#interactive")} />;
 };
 
 export default VillageTransformationPage;

@@ -4,7 +4,7 @@ import QuickTimelineStory from "../components/QuickTimelineStory";
 const QuickTimelinePage = () => {
   const navigate = useNavigate();
 
-  return <QuickTimelineStory onBack={() => navigate("/")} />;
+  return <QuickTimelineStory onBack={() => navigate("/#interactive")} />;
 };
 
 export default QuickTimelinePage;

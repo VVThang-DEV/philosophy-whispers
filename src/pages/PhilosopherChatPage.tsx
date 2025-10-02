@@ -30,7 +30,7 @@ const PhilosopherChatPage = () => {
   }, [searchParams, navigate]);
 
   const handleBack = () => {
-    navigate("/");
+    navigate("/#sphere");
   };
 
   if (!philosopher) {
