@@ -77,7 +77,7 @@ const DebateModePage = () => {
 
           <div className="inline-block bg-[hsl(240,45%,8%)]/60 backdrop-blur-md border border-[hsl(270,60%,50%)]/30 rounded-xl p-4">
             <p className="text-sm text-[hsl(270,60%,75%)]">
-              🎭 Mỗi triết gia có 3 trái tim ❤️ • 💬 Họ sẽ tranh luận 2-3 lượt •
+              🎭 Mỗi triết gia có 2 trái tim ❤️ • 💬 Họ sẽ tranh luận 2-3 lượt •
               ⚖️ Bạn quyết định người chiến thắng!
             </p>
           </div>

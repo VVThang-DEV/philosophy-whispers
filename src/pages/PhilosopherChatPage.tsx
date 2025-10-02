@@ -85,10 +85,10 @@ const PhilosopherChatPage = () => {
 
           <div className="flex items-center gap-3">
             <div className="text-right hidden sm:block">
-              <h1 className="text-lg font-bold text-[hsl(40,20%,95%)]">
+              <h1 className="text-lg pr-2 font-bold text-[hsl(40,20%,95%)]">
                 Philosophy Whispers
               </h1>
-              <p className="text-xs text-[hsl(40,20%,95%)]/60">
+              <p className="text-xs pr-9 text-[hsl(40,20%,95%)]/60">
                 Trò chuyện với triết gia
               </p>
             </div>

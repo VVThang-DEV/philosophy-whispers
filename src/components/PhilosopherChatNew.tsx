@@ -6,17 +6,45 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
   PhilosopherChatService,
-  getPhilosopherGreeting,
   type ChatMessage,
 } from "@/services/geminiService";
 import type { Philosopher } from "@/data/philosophers";
-import { Loader2, Send, Sparkles, MessageCircle } from "lucide-react";
+import { Loader2, Send, Sparkles, MessageCircle, Info } from "lucide-react";
 
 interface PhilosopherChatProps {
   philosopher: Philosopher;
   onClose?: () => void;
 }
+
+// Helper function to get pronoun pair for each philosopher
+const getPronounPair = (
+  philosopherId: string
+): { speaker: string; listener: string } => {
+  const pronounMap: Record<string, { speaker: string; listener: string }> = {
+    marx: { speaker: "Tôi", listener: "bạn" },
+    lenin: { speaker: "Tôi", listener: "đồng chí" },
+    socrates: { speaker: "Ta", listener: "ngươi" },
+    plato: { speaker: "Ta", listener: "các ngươi" },
+    aristotle: { speaker: "Ta", listener: "học trò" },
+    confucius: { speaker: "Lão phu", listener: "các ngươi" },
+    laozi: { speaker: "Lão phu", listener: "ngươi" },
+    descartes: { speaker: "Tôi", listener: "bạn" },
+    kant: { speaker: "Tôi", listener: "bạn" },
+    nietzsche: { speaker: "Ta", listener: "ngươi" },
+    sartre: { speaker: "Tôi", listener: "bạn" },
+    hegel: { speaker: "Tôi", listener: "bạn" },
+  };
+  return pronounMap[philosopherId] || { speaker: "Tôi", listener: "bạn" };
+};
 
 export default function PhilosopherChatNew({
   philosopher,
@@ -28,15 +56,22 @@ export default function PhilosopherChatNew({
   const [chatService, setChatService] = useState<PhilosopherChatService | null>(
     null
   );
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const service = new PhilosopherChatService(philosopher);
     setChatService(service);
 
-    // Add greeting message
-    const greeting = getPhilosopherGreeting(philosopher);
+    // Get fixed pronouns for this philosopher
+    const pronouns = getPronounPair(philosopher.id);
+
+    // Add simple greeting message with fixed pronouns
+    const greeting = `${
+      philosopher.greeting
+    } Hãy cùng ${pronouns.speaker.toLowerCase()} trao đổi về triết học và cuộc sống. ${
+      pronouns.listener.charAt(0).toUpperCase() + pronouns.listener.slice(1)
+    } muốn thảo luận về điều gì?`;
     setMessages([
       {
         role: "model",
@@ -45,8 +80,11 @@ export default function PhilosopherChatNew({
       },
     ]);
 
-    // Focus input
-    setTimeout(() => inputRef.current?.focus(), 100);
+    // Scroll to top and focus input
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      inputRef.current?.focus();
+    }, 100);
 
     return () => {
       service.clearHistory();
@@ -55,9 +93,7 @@ export default function PhilosopherChatNew({
 
   useEffect(() => {
     // Scroll to bottom when messages change
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   const handleSend = async () => {
@@ -133,10 +169,87 @@ export default function PhilosopherChatNew({
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
-            <h2 className="text-lg sm:text-xl md:text-2xl font-black text-[hsl(40,20%,95%)] mb-1 flex items-center gap-2 truncate">
-              {philosopher.name}
-              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-[hsl(45,100%,65%)] animate-pulse drop-shadow-[0_0_8px_hsl(45,100%,65%)] shrink-0" />
-            </h2>
+            <div className="flex items-center gap-2 mb-1">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-black text-[hsl(40,20%,95%)] flex items-center gap-2 truncate">
+                {philosopher.name}
+                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-[hsl(45,100%,65%)] animate-pulse shrink-0" />
+              </h2>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 w-6 p-0 text-[hsl(270,60%,70%)] hover:text-[hsl(270,60%,90%)] hover:bg-[hsl(270,60%,50%)]/20 shrink-0"
+                  >
+                    <Info className="w-4 h-4" />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="bg-[hsl(240,45%,6%)] border-[hsl(270,60%,50%)]/30 text-[hsl(40,20%,95%)] max-w-2xl max-h-[80vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle className="text-2xl font-bold text-[hsl(270,60%,90%)] flex items-center gap-2">
+                      {philosopher.name}
+                      <Badge
+                        variant="secondary"
+                        className="bg-[hsl(270,60%,50%)]/30 text-[hsl(270,60%,80%)]"
+                      >
+                        {philosopher.school}
+                      </Badge>
+                    </DialogTitle>
+                    <DialogDescription className="text-[hsl(270,60%,70%)]">
+                      {philosopher.era}
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 mt-4">
+                    <div>
+                      <h3 className="text-lg font-semibold text-[hsl(270,60%,85%)] mb-2">
+                        📖 Giới thiệu
+                      </h3>
+                      <p className="text-[hsl(40,20%,85%)] leading-relaxed">
+                        {philosopher.description}
+                      </p>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-[hsl(270,60%,85%)] mb-2">
+                        🎯 Ý tưởng chính
+                      </h3>
+                      <ul className="space-y-2">
+                        {philosopher.keyIdeas.map((idea, idx) => (
+                          <li
+                            key={idx}
+                            className="text-[hsl(40,20%,85%)] flex gap-2"
+                          >
+                            <span className="text-[hsl(270,60%,70%)]">•</span>
+                            <span>{idea}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-[hsl(270,60%,85%)] mb-2">
+                        💬 Câu nói nổi tiếng
+                      </h3>
+                      <blockquote className="border-l-4 border-[hsl(270,60%,50%)] pl-4 italic text-[hsl(40,20%,85%)]">
+                        "{philosopher.famousQuote}"
+                      </blockquote>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-[hsl(270,60%,85%)] mb-2">
+                        🗣️ Phong cách giao tiếp
+                      </h3>
+                      <p className="text-[hsl(40,20%,85%)]">
+                        <strong>Lời chào:</strong> {philosopher.greeting}
+                      </p>
+                      <p className="text-[hsl(40,20%,85%)] mt-1">
+                        <strong>Cách xưng hô:</strong> {philosopher.pronouns}
+                      </p>
+                      <p className="text-[hsl(40,20%,85%)] mt-2">
+                        {philosopher.personality}
+                      </p>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
             <div className="flex gap-1.5 sm:gap-2 flex-wrap">
               <Badge
                 variant="secondary"
@@ -166,10 +279,7 @@ export default function PhilosopherChatNew({
       </div>
 
       {/* Messages */}
-      <ScrollArea
-        className="flex-1 p-3 sm:p-4 md:p-6 relative z-10"
-        ref={scrollRef}
-      >
+      <ScrollArea className="flex-1 p-3 sm:p-4 md:p-6 relative z-10">
         <div className="space-y-4 sm:space-y-6 max-w-4xl mx-auto">
           {messages.map((msg, idx) => (
             <div
@@ -178,7 +288,7 @@ export default function PhilosopherChatNew({
                 msg.role === "user" ? "flex-row-reverse" : "flex-row"
               }`}
             >
-              {msg.role === "model" && (
+              {msg.role === "model" ? (
                 <Avatar className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 border-2 border-[hsl(270,60%,50%)] shadow-[0_0_15px_hsl(270,60%,50%,0.4)] shrink-0">
                   <AvatarImage
                     src={philosopher.avatar}
@@ -188,6 +298,10 @@ export default function PhilosopherChatNew({
                     {philosopher.name.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
+              ) : (
+                <div className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 rounded-full bg-gradient-to-br from-[hsl(190,80%,60%)] to-[hsl(220,70%,55%)] flex items-center justify-center shadow-[0_0_15px_hsl(190,80%,60%,0.4)] shrink-0">
+                  <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                </div>
               )}
 
               <div
@@ -213,12 +327,6 @@ export default function PhilosopherChatNew({
                   })}
                 </p>
               </div>
-
-              {msg.role === "user" && (
-                <div className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 rounded-full bg-gradient-to-br from-[hsl(190,80%,60%)] to-[hsl(220,70%,55%)] flex items-center justify-center shadow-[0_0_15px_hsl(190,80%,60%,0.4)] shrink-0">
-                  <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                </div>
-              )}
             </div>
           ))}
 
@@ -235,6 +343,8 @@ export default function PhilosopherChatNew({
               </div>
             </div>
           )}
+          {/* Invisible div to scroll to */}
+          <div ref={messagesEndRef} />
         </div>
       </ScrollArea>
 
