@@ -257,7 +257,7 @@ const PhilosopherDebate = ({
     const welcomeMessage: Message = {
       id: `welcome-${Date.now()}`,
       speaker: "user",
-      content: `🎭 Cuộc tranh luận mới bắt đầu!\n\n${philosopher1.name} vs ${philosopher2.name}\n\nMỗi triết gia có 3 trái tim ❤️`,
+      content: `🎭 Cuộc tranh luận mới bắt đầu!\n\n${philosopher1.name} vs ${philosopher2.name}\n\nMỗi triết gia có 2 trái tim ❤️`,
       timestamp: Date.now(),
     };
     setMessages([welcomeMessage]);
