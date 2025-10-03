@@ -3,6 +3,13 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import {
   TrendingUp,
   TrendingDown,
   GraduationCap,
@@ -100,6 +107,53 @@ const VillageTransformationGame = ({
   const [maxDecisionsPerPhase] = useState(2);
   const [randomEvent, setRandomEvent] = useState<RandomEvent | null>(null);
   const [showRandomEvent, setShowRandomEvent] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(true);
+  const [tutorialStep, setTutorialStep] = useState(0);
+
+  const tutorialSteps = [
+    {
+      title: "Chào mừng đến với Philosophy Whispers!",
+      content:
+        "Đây là một game giáo dục về việc chuyển đổi xã hội qua triết học. Bạn sẽ đưa ra các quyết định để phát triển làng quê Việt Nam từ thập kỷ 1990 đến tương lai.",
+      icon: "🎮",
+    },
+    {
+      title: "Hiểu về các chỉ số",
+      content:
+        "Theo dõi 5 chỉ số chính: GDP (kinh tế), Literacy (trình độ), Healthcare (y tế), Superstition (mê tín), và Urbanization (đô thị hóa). Mục tiêu là giảm mê tín xuống dưới 10%.",
+      icon: "📊",
+    },
+    {
+      title: "Quyết định và Ngân sách",
+      content:
+        "Mỗi giai đoạn, chọn 2 quyết định từ các lựa chọn có sẵn. Mỗi quyết định có chi phí và ảnh hưởng đến các chỉ số. Ngân sách tăng dựa trên GDP - quản lý tài chính là chìa khóa!",
+      icon: "💰",
+    },
+    {
+      title: "Sự kiện Ngẫu nhiên",
+      content:
+        "30% khả năng mỗi giai đoạn có sự kiện ngẫu nhiên. Chúng có thể giúp hoặc cản trở tiến trình của bạn. Luôn sẵn sàng thích ứng!",
+      icon: "🎲",
+    },
+    {
+      title: "Bỏ qua khi cần thiết",
+      content:
+        "Nếu hết tiền, bạn có thể tạm dừng giai đoạn để tái cơ cấu. Có hậu quả nhưng cho phép tiếp tục học hỏi. Tập trung phát triển kinh tế để tránh tình huống này!",
+      icon: "⏸️",
+    },
+  ];
+
+  const nextTutorial = () => {
+    if (tutorialStep < tutorialSteps.length - 1) {
+      setTutorialStep(tutorialStep + 1);
+    } else {
+      setShowTutorial(false);
+    }
+  };
+
+  const skipTutorial = () => {
+    setShowTutorial(false);
+  };
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const randomEvents: RandomEvent[] = [
@@ -943,6 +997,12 @@ const VillageTransformationGame = ({
     },
   ];
 
+  const getMinDecisionCost = (phaseIndex: number): number => {
+    if (phaseIndex < 0 || phaseIndex >= phases.length) return 0;
+    const phaseDecisions = phases[phaseIndex].decisions;
+    return Math.min(...phaseDecisions.map((d) => d.cost));
+  };
+
   // Animated chart on canvas
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -1202,12 +1262,43 @@ const VillageTransformationGame = ({
     proceedToNextPhase();
   };
 
+  const skipPhase = () => {
+    // Softer, educational penalties that teach lessons
+    const budgetPenalty = Math.floor(budget * 0.12); // Reduced from 25% to 12%
+    const newBudget = Math.max(50, budget - budgetPenalty); // Minimum 50 budget
+
+    // Scale penalties based on current GDP (reward good players with mercy)
+    const mercyMultiplier = Math.min(1, villageStats.gdpPerCapita / 50); // 0-1 scale
+    const gdpPenalty = Math.floor(3 + (1 - mercyMultiplier) * 3); // 3-6 (better players get less penalty)
+    const superstitionPenalty = Math.floor(6 + (1 - mercyMultiplier) * 4); // 6-10
+
+    // Apply stat penalties
+    const newStats = {
+      ...villageStats,
+      gdpPerCapita: Math.max(0, villageStats.gdpPerCapita - gdpPenalty),
+      superstitionRate: Math.min(
+        100,
+        villageStats.superstitionRate + superstitionPenalty
+      ),
+      // Small literacy boost as "learning from failure"
+      literacyRate: Math.min(100, villageStats.literacyRate + 2),
+    };
+
+    setVillageStats(newStats);
+    setBudget(newBudget);
+
+    // Advance to next phase
+    proceedToNextPhase();
+  };
   const proceedToNextPhase = () => {
     if (currentPhase < phases.length - 1) {
       setCurrentPhase(currentPhase + 1);
-      // Budget increases based on GDP growth - more challenging
-      const budgetIncrease = Math.floor(300 + villageStats.gdpPerCapita * 2);
-      setBudget(budget + budgetIncrease);
+      // Budget increases based on GDP growth - more generous base for smoother progression
+      const budgetIncrease = Math.floor(350 + villageStats.gdpPerCapita * 2);
+      const newBudget = budget + budgetIncrease;
+      // Ensure budget is sufficient for at least one decision
+      const minCost = getMinDecisionCost(currentPhase + 1);
+      setBudget(Math.max(newBudget, minCost));
       setShowAnalysis(false);
       setDecisionsThisPhase(0);
       setPendingDecisions([]);
@@ -2235,6 +2326,55 @@ const VillageTransformationGame = ({
 
   return (
     <div className="h-screen bg-gradient-to-b from-[hsl(240,45%,6%)] to-[hsl(240,40%,8%)] flex flex-col">
+      {/* Tutorial Overlay */}
+      <Dialog open={showTutorial} onOpenChange={skipTutorial}>
+        <DialogContent className="bg-[hsl(240,45%,8%)]/95 backdrop-blur-xl border-[hsl(270,60%,50%)]/40 max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-center text-2xl font-black text-[hsl(40,20%,95%)] flex items-center justify-center gap-3">
+              <span className="text-4xl">
+                {tutorialSteps[tutorialStep].icon}
+              </span>
+              {tutorialSteps[tutorialStep].title}
+            </DialogTitle>
+            <DialogDescription className="text-center text-lg text-[hsl(270,60%,75%)] mt-4">
+              {tutorialSteps[tutorialStep].content}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex items-center justify-between mt-6">
+            <div className="flex items-center gap-2">
+              {tutorialSteps.map((_, index) => (
+                <div
+                  key={index}
+                  className={`w-3 h-3 rounded-full ${
+                    index === tutorialStep
+                      ? "bg-[hsl(270,60%,50%)]"
+                      : "bg-[hsl(240,45%,20%)]"
+                  }`}
+                />
+              ))}
+            </div>
+            <div className="flex gap-3">
+              <Button
+                onClick={skipTutorial}
+                variant="outline"
+                className="border-[hsl(40,20%,95%)]/50 hover:bg-[hsl(270,60%,50%)]/30 text-[hsl(40,20%,95%)]"
+              >
+                Bỏ qua
+              </Button>
+              <Button
+                onClick={nextTutorial}
+                className="bg-gradient-to-r from-[hsl(270,60%,50%)] to-[hsl(220,70%,55%)] hover:from-[hsl(270,60%,60%)] hover:to-[hsl(220,70%,65%)] text-white"
+              >
+                {tutorialStep < tutorialSteps.length - 1
+                  ? "Tiếp theo"
+                  : "Bắt đầu chơi"}
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <ScrollArea className="flex-1 p-3 sm:p-6 md:p-8">
         <div className="container mx-auto max-w-7xl flex flex-col space-y-4 sm:space-y-6">
           {/* Header */}
@@ -2449,78 +2589,138 @@ const VillageTransformationGame = ({
                       </div>
                     </div>
                     <div className="grid md:grid-cols-2 gap-4">
-                      {phase.decisions.map((decision) => {
-                        // Dynamic icon based on decision type
-                        const getDecisionIcon = (id: string) => {
-                          if (id.includes("edu")) return "🏫";
-                          if (
-                            id.includes("econ") ||
-                            id.includes("industry") ||
-                            id.includes("tech")
-                          )
-                            return "🏭";
-                          if (id.includes("health")) return "🏥";
-                          if (id.includes("culture") || id.includes("digital"))
-                            return "📚";
-                          if (id.includes("university")) return "🎓";
-                          if (id.includes("counseling")) return "🧠";
-                          if (id.includes("ban")) return "�";
-                          if (id.includes("casino")) return "🎰";
-                          if (id.includes("corruption")) return "🤝";
-                          if (id.includes("surveillance")) return "👁️";
-                          if (id.includes("genetic")) return "🧬";
-                          if (id.includes("fake") || id.includes("propaganda"))
-                            return "📢";
-                          return "🔧";
-                        };
-
-                        const isSelected = pendingDecisions.some(
-                          (d) => d.id === decision.id
-                        );
-
+                      {(() => {
+                        // Check if any decision can be afforded
                         const currentSpending = pendingDecisions.reduce(
                           (sum, d) => sum + d.cost,
                           0
                         );
-                        const canAfford =
-                          currentSpending + decision.cost <= budget ||
-                          isSelected;
-
-                        return (
-                          <button
-                            key={decision.id}
-                            onClick={() => handleDecision(decision)}
-                            disabled={!canAfford && !isSelected}
-                            className={`text-left p-4 sm:p-5 md:p-6 rounded-xl border-2 transition-all duration-300 ${
-                              isSelected
-                                ? "bg-[hsl(270,60%,50%)]/20 border-[hsl(270,60%,50%)] ring-2 ring-[hsl(270,60%,50%)]/50 cursor-pointer hover:bg-[hsl(270,60%,50%)]/30"
-                                : "bg-[hsl(240,45%,10%)]/40 border-[hsl(270,60%,50%)]/30 hover:border-[hsl(270,60%,50%)]/60 hover:bg-[hsl(240,45%,10%)]/60 hover:scale-[1.02] active:scale-95"
-                            } disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 group`}
-                          >
-                            <div className="flex items-start justify-between mb-2 sm:mb-3">
-                              <div className="flex items-center gap-2 sm:gap-3 flex-1">
-                                <span className="text-2xl sm:text-3xl group-hover:scale-110 transition-transform flex-shrink-0">
-                                  {getDecisionIcon(decision.id)}
-                                </span>
-                                <h4 className="text-base sm:text-lg font-bold text-[hsl(40,20%,95%)] group-hover:text-[hsl(270,60%,75%)] transition-colors">
-                                  {decision.title}
-                                  {isSelected && (
-                                    <span className="ml-2 text-xs px-2 py-1 rounded-full bg-[hsl(270,60%,50%)] text-white group-hover:bg-red-500">
-                                      ✓ Bỏ chọn?
-                                    </span>
-                                  )}
-                                </h4>
-                              </div>
-                              <div className="text-lg sm:text-xl font-black text-[hsl(270,60%,75%)] ml-2 flex-shrink-0">
-                                -{decision.cost}
-                              </div>
-                            </div>
-                            <p className="text-xs sm:text-sm text-[hsl(40,20%,95%)]/70 mb-2 sm:mb-3">
-                              {decision.description}
-                            </p>
-                          </button>
+                        const canAffordAny = phase.decisions.some(
+                          (decision) =>
+                            currentSpending + decision.cost <= budget
                         );
-                      })}
+
+                        if (!canAffordAny && pendingDecisions.length === 0) {
+                          // Show skip option when no decisions are affordable
+                          return (
+                            <div className="col-span-full p-6 rounded-xl bg-amber-900/20 border-2 border-amber-500/50 text-center">
+                              <AlertCircle className="w-12 h-12 text-amber-400 mx-auto mb-4" />
+                              <h4 className="text-lg font-bold text-amber-300 mb-2">
+                                Cơ Hội Học Hỏi
+                              </h4>
+                              <p className="text-amber-200 mb-4">
+                                Ngân sách hiện tại không đủ để thực hiện các
+                                chính sách. Bạn có thể tạm dừng giai đoạn này để
+                                tái cơ cấu, nhưng sẽ có những hệ quả.
+                              </p>
+                              <div className="text-sm text-amber-300/70 mb-4 space-y-1">
+                                <p className="text-green-300">
+                                  • Học hỏi từ thất bại (+2 trình độ)
+                                </p>
+                                <p>• Mất 12% ngân sách (tối thiểu 50)</p>
+                                <p>
+                                  • GDP giảm 3-6 điểm (ít hơn nếu phát triển
+                                  tốt)
+                                </p>
+                                <p>• Mê tín tăng 6-10 điểm</p>
+                              </div>
+                              <div className="text-xs text-amber-400/60 mb-4 italic">
+                                💡 Mẹo: Tập trung vào phát triển kinh tế để tăng
+                                ngân sách tương lai
+                              </div>
+                              <Button
+                                onClick={skipPhase}
+                                variant="outline"
+                                size="lg"
+                                className="border-amber-500 text-amber-300 hover:bg-amber-500/20 px-8 py-3"
+                              >
+                                <ArrowRight className="w-5 h-5 mr-2" />
+                                Tạm Dừng & Học Hỏi
+                              </Button>
+                            </div>
+                          );
+                        }
+
+                        // Normal decision rendering
+                        return phase.decisions.map((decision) => {
+                          // Dynamic icon based on decision type
+                          const getDecisionIcon = (id: string) => {
+                            if (id.includes("edu")) return "🏫";
+                            if (
+                              id.includes("econ") ||
+                              id.includes("industry") ||
+                              id.includes("tech")
+                            )
+                              return "🏭";
+                            if (id.includes("health")) return "🏥";
+                            if (
+                              id.includes("culture") ||
+                              id.includes("digital")
+                            )
+                              return "📚";
+                            if (id.includes("university")) return "🎓";
+                            if (id.includes("counseling")) return "🧠";
+                            if (id.includes("ban")) return "�";
+                            if (id.includes("casino")) return "🎰";
+                            if (id.includes("corruption")) return "🤝";
+                            if (id.includes("surveillance")) return "👁️";
+                            if (id.includes("genetic")) return "🧬";
+                            if (
+                              id.includes("fake") ||
+                              id.includes("propaganda")
+                            )
+                              return "📢";
+                            return "🔧";
+                          };
+
+                          const isSelected = pendingDecisions.some(
+                            (d) => d.id === decision.id
+                          );
+
+                          const currentSpending = pendingDecisions.reduce(
+                            (sum, d) => sum + d.cost,
+                            0
+                          );
+                          const canAfford =
+                            currentSpending + decision.cost <= budget ||
+                            isSelected;
+
+                          return (
+                            <button
+                              key={decision.id}
+                              onClick={() => handleDecision(decision)}
+                              disabled={!canAfford && !isSelected}
+                              className={`text-left p-4 sm:p-5 md:p-6 rounded-xl border-2 transition-all duration-300 ${
+                                isSelected
+                                  ? "bg-[hsl(270,60%,50%)]/20 border-[hsl(270,60%,50%)] ring-2 ring-[hsl(270,60%,50%)]/50 cursor-pointer hover:bg-[hsl(270,60%,50%)]/30"
+                                  : "bg-[hsl(240,45%,10%)]/40 border-[hsl(270,60%,50%)]/30 hover:border-[hsl(270,60%,50%)]/60 hover:bg-[hsl(240,45%,10%)]/60 hover:scale-[1.02] active:scale-95"
+                              } disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 group`}
+                            >
+                              <div className="flex items-start justify-between mb-2 sm:mb-3">
+                                <div className="flex items-center gap-2 sm:gap-3 flex-1">
+                                  <span className="text-2xl sm:text-3xl group-hover:scale-110 transition-transform flex-shrink-0">
+                                    {getDecisionIcon(decision.id)}
+                                  </span>
+                                  <h4 className="text-base sm:text-lg font-bold text-[hsl(40,20%,95%)] group-hover:text-[hsl(270,60%,75%)] transition-colors">
+                                    {decision.title}
+                                    {isSelected && (
+                                      <span className="ml-2 text-xs px-2 py-1 rounded-full bg-[hsl(270,60%,50%)] text-white group-hover:bg-red-500">
+                                        ✓ Bỏ chọn?
+                                      </span>
+                                    )}
+                                  </h4>
+                                </div>
+                                <div className="text-lg sm:text-xl font-black text-[hsl(270,60%,75%)] ml-2 flex-shrink-0">
+                                  -{decision.cost}
+                                </div>
+                              </div>
+                              <p className="text-xs sm:text-sm text-[hsl(40,20%,95%)]/70 mb-2 sm:mb-3">
+                                {decision.description}
+                              </p>
+                            </button>
+                          );
+                        });
+                      })()}
                     </div>
 
                     {/* Confirm Button */}
