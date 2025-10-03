@@ -61,26 +61,267 @@ interface Phase {
   decisions: Decision[];
 }
 
+interface RandomEvent {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  effects: {
+    gdp: number;
+    literacy: number;
+    healthcare: number;
+    superstition: number;
+    urbanization: number;
+    budgetChange: number;
+  };
+  explanation: string;
+  isPositive: boolean;
+}
+
 const VillageTransformationGame = ({
   onBack,
 }: VillageTransformationGameProps = {}) => {
   const [currentPhase, setCurrentPhase] = useState(0);
-  const [budget, setBudget] = useState(800);
+  const [budget, setBudget] = useState(600); // Reduced starting budget for more challenge
   const [villageStats, setVillageStats] = useState<VillageStats>({
     year: 1990,
     gdpPerCapita: 30,
     literacyRate: 35,
     healthcareAccess: 25,
-    superstitionRate: 75,
+    superstitionRate: 50,
     urbanization: 20,
   });
+  const [gameFailure, setGameFailure] = useState<string | null>(null);
   const [decisionHistory, setDecisionHistory] = useState<Decision[]>([]);
   const [pendingDecisions, setPendingDecisions] = useState<Decision[]>([]);
   const [showAnalysis, setShowAnalysis] = useState(false);
   const [gameComplete, setGameComplete] = useState(false);
   const [decisionsThisPhase, setDecisionsThisPhase] = useState(0);
   const [maxDecisionsPerPhase] = useState(2);
+  const [randomEvent, setRandomEvent] = useState<RandomEvent | null>(null);
+  const [showRandomEvent, setShowRandomEvent] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const randomEvents: RandomEvent[] = [
+    // Positive events
+    {
+      id: "tech_donor",
+      title: "Nhà Tài Trợ Công Nghệ",
+      description:
+        "Một tập đoàn công nghệ quyết định tài trợ thiết bị máy tính và internet miễn phí cho trường học trong làng.",
+      icon: "🎁",
+      effects: {
+        gdp: 8,
+        literacy: 15,
+        healthcare: 0,
+        superstition: -12,
+        urbanization: 10,
+        budgetChange: 200,
+      },
+      explanation:
+        "Tiếp cận công nghệ → Giáo dục hiện đại hóa → Giảm mê tín qua tri thức",
+      isPositive: true,
+    },
+    {
+      id: "successful_graduate",
+      title: "Con Em Làng Thành Công",
+      description:
+        "Một người con làng học giỏi, trở về mở doanh nghiệp, tạo việc làm và truyền cảm hứng cho thế hệ trẻ.",
+      icon: "🎓",
+      effects: {
+        gdp: 12,
+        literacy: 18,
+        healthcare: 5,
+        superstition: -15,
+        urbanization: 8,
+        budgetChange: 150,
+      },
+      explanation:
+        "Tấm gương thành công → Niềm tin vào giáo dục → Thay đổi tâm lý đám đông",
+      isPositive: true,
+    },
+    {
+      id: "medical_miracle",
+      title: "Ca Chữa Bệnh Thần Kỳ",
+      description:
+        "Bác sĩ địa phương chữa khỏi một căn bệnh mà dân làng từng tin chỉ thầy bói mới giải được. Câu chuyện lan rộng.",
+      icon: "⚕️",
+      effects: {
+        gdp: 5,
+        literacy: 10,
+        healthcare: 20,
+        superstition: -25,
+        urbanization: 5,
+        budgetChange: 100,
+      },
+      explanation:
+        "Thực tiễn chứng minh sức mạnh y học → Niềm tin vào khoa học tăng mạnh",
+      isPositive: true,
+    },
+    {
+      id: "cultural_exchange",
+      title: "Chương Trình Trao Đổi Văn Hóa",
+      description:
+        "Giới trẻ làng được tham gia chương trình trao đổi với các thành phố lớn, mở mang tầm nhìn.",
+      icon: "🌍",
+      effects: {
+        gdp: 10,
+        literacy: 20,
+        healthcare: 8,
+        superstition: -18,
+        urbanization: 15,
+        budgetChange: 180,
+      },
+      explanation:
+        "Tiếp xúc văn hóa đô thị → Tư duy hiện đại → Giảm ảnh hưởng truyền thống lạc hậu",
+      isPositive: true,
+    },
+    {
+      id: "journalist_expose",
+      title: "Phóng Viên Vạch Trần Lừa Đảo",
+      description:
+        "Phóng viên điều tra và phanh phui một vụ thầy bói lừa đảo tiền của dân. Vụ việc được truyền thông rộng rãi.",
+      icon: "📰",
+      effects: {
+        gdp: 0,
+        literacy: 12,
+        healthcare: 0,
+        superstition: -20,
+        urbanization: 5,
+        budgetChange: 0,
+      },
+      explanation:
+        "Vạch trần sự thật → Dân chúng tỉnh ngộ → Mê tín bị nghi ngờ",
+      isPositive: true,
+    },
+    // Negative events
+    {
+      id: "fake_prophet",
+      title: "Thầy Bói Nổi Tiếng Xuất Hiện",
+      description:
+        "Một 'thầy bói' tự xưng có phép màu đến làng, thu hút đông đảo người tin. Truyền thông xã hội lan tỏa nhanh chóng.",
+      icon: "🔮",
+      effects: {
+        gdp: -8,
+        literacy: -10,
+        healthcare: -5,
+        superstition: 30,
+        urbanization: -5,
+        budgetChange: -150,
+      },
+      explanation:
+        "Mê tín lan truyền viral → Dân chúng bỏ công việc đi theo → Kinh tế suy giảm",
+      isPositive: false,
+    },
+    {
+      id: "economic_crisis",
+      title: "Khủng Hoảng Kinh Tế",
+      description:
+        "Suy thoái kinh tế khu vực ảnh hưởng đến làng. Nhiều người mất việc, tâm lý bất an gia tăng.",
+      icon: "📉",
+      effects: {
+        gdp: -15,
+        literacy: -5,
+        healthcare: -8,
+        superstition: 20,
+        urbanization: -10,
+        budgetChange: -200,
+      },
+      explanation:
+        "Khủng hoảng kinh tế → Lo âu tăng cao → Tìm đến mê tín để nương tựa",
+      isPositive: false,
+    },
+    {
+      id: "epidemic_scare",
+      title: "Tin Đồn Dịch Bệnh",
+      description:
+        "Tin đồn về dịch bệnh lan truyền. Nhiều người tin vào các phương pháp 'truyền thống' thay vì y học hiện đại.",
+      icon: "😷",
+      effects: {
+        gdp: -10,
+        literacy: 0,
+        healthcare: -15,
+        superstition: 25,
+        urbanization: -8,
+        budgetChange: -100,
+      },
+      explanation:
+        "Hoảng loạn → Lý trí giảm sút → Mê tín về 'bùa hộ mệnh' bùng phát",
+      isPositive: false,
+    },
+    {
+      id: "natural_disaster",
+      title: "Thiên Tai",
+      description:
+        "Lũ lụt/hạn hán ảnh hưởng mùa màng. Người già trong làng cho rằng đây là 'thiên tai' do làng không cúng bái đúng cách.",
+      icon: "⛈️",
+      effects: {
+        gdp: -12,
+        literacy: -8,
+        healthcare: -10,
+        superstition: 28,
+        urbanization: -12,
+        budgetChange: -180,
+      },
+      explanation:
+        "Thiên tai → Tâm lý sợ hãi → Giải thích mê tín thay khoa học",
+      isPositive: false,
+    },
+    {
+      id: "corrupt_official",
+      title: "Tham Nhũng Bị Phát Hiện",
+      description:
+        "Một quan chức địa phương tham ô ngân sách phát triển. Dân chúng mất niềm tin vào chính quyền và tiến bộ.",
+      icon: "💰",
+      effects: {
+        gdp: -18,
+        literacy: -12,
+        healthcare: -12,
+        superstition: 22,
+        urbanization: -15,
+        budgetChange: -250,
+      },
+      explanation:
+        "Tham nhũng → Mất niềm tin nhà nước → Dân chúng quay về mê tín truyền thống",
+      isPositive: false,
+    },
+    {
+      id: "social_media_hoax",
+      title: "Tin Giả Lan Truyền",
+      description:
+        "Video 'phép màu' giả mạo lan viral trên mạng xã hội, thu hút hàng triệu lượt xem. Nhiều người tin là thật.",
+      icon: "📱",
+      effects: {
+        gdp: -5,
+        literacy: -15,
+        healthcare: 0,
+        superstition: 32,
+        urbanization: 5,
+        budgetChange: -80,
+      },
+      explanation:
+        "Công nghệ phổ biến nhưng thiếu tư duy phản biện → Tin giả lan nhanh → Mê tín online bùng nổ",
+      isPositive: false,
+    },
+    {
+      id: "brain_drain",
+      title: "Chảy Máu Chất Xám",
+      description:
+        "Nhiều người trẻ có học thức rời làng đi thành phố lớn. Làng mất đi lực lượng trẻ có tư duy hiện đại.",
+      icon: "✈️",
+      effects: {
+        gdp: -10,
+        literacy: -18,
+        healthcare: -5,
+        superstition: 18,
+        urbanization: -20,
+        budgetChange: -120,
+      },
+      explanation:
+        "Người trẻ di cư → Làng thiếu tri thức → Người già giữ truyền thống mê tín",
+      isPositive: false,
+    },
+  ];
 
   const phases: Phase[] = [
     {
@@ -96,7 +337,7 @@ const VillageTransformationGame = ({
       historicalContext:
         "Sau Đổi Mới 1986, kinh tế bắt đầu mở cửa nhưng nông thôn vẫn nghèo. Nhiều người tin vào thầy bói, xem ngày giờ, cúng bái để cầu may.",
       challenge:
-        "75% dân làng tin vào mê tín dị đoan. Chọn 2 quyết định để bắt đầu chuyển đổi.",
+        "50% dân làng tin vào mê tín dị đoan. Chọn 2 quyết định để bắt đầu chuyển đổi.",
       decisions: [
         {
           id: "edu_basic",
@@ -176,18 +417,35 @@ const VillageTransformationGame = ({
         },
         {
           id: "ban_superstition",
-          title: "Cấm Hoạt Động Mê Tín (Rủi ro cao)",
-          description: "Ban hành quy định cấm bói toán, phạt vi phạm",
+          title: "Cấm Hoạt Động Mê Tín",
+          description:
+            "Ban hành quy định cấm bói toán, phạt nặng người vi phạm. Giải pháp nhanh chóng và quyết liệt.",
           cost: 150,
           effects: {
-            gdp: -10,
-            literacy: 0,
-            healthcare: 0,
-            superstition: -5,
-            urbanization: 0,
+            gdp: -15,
+            literacy: -5,
+            healthcare: -10,
+            superstition: 10,
+            urbanization: -8,
           },
           mlnExplanation:
-            "Biện pháp hành chính không thay đổi điều kiện vật chất → Người dân vẫn tin, chỉ che giấu → Không bền vững, có thể gây phản tác dụng",
+            "THẤT BẠI NGHIÊM TRỌNG: Cấm đoán không có cơ sở vật chất → Dân chúng nổi loạn, chống đối → Mê tín gia tăng do tâm lý phản kháng → Kinh tế suy thoái vì bất ổn xã hội",
+        },
+        {
+          id: "corruption_path",
+          title: "Đối Tác Với Thầy Bói",
+          description:
+            "Thỏa thuận với thầy bói địa phương để thu phí 'quản lý', tạo nguồn thu cho ngân sách phát triển",
+          cost: -200,
+          effects: {
+            gdp: 8,
+            literacy: -15,
+            healthcare: -8,
+            superstition: 25,
+            urbanization: -5,
+          },
+          mlnExplanation:
+            "THẤT BẠI ĐẠO ĐỨC: Tham nhũng tạo lợi ích ngắn hạn nhưng hủy hoại niềm tin → Mê tín được chính quyền bảo vệ → Dân chúng mất niềm tin vào nhà nước → Xã hội thoái hóa",
         },
       ],
     },
@@ -403,6 +661,22 @@ const VillageTransformationGame = ({
           mlnExplanation:
             "Dùng công cụ hiện đại để lan tỏa → Tiếp cận giới trẻ hiệu quả → Tạo trend khoa học",
         },
+        {
+          id: "casino_investment",
+          title: "Khu Giải Trí & Casino Du Lịch",
+          description:
+            "Xây dựng casino thu hút du khách quốc tế, tạo việc làm và doanh thu cao cho địa phương",
+          cost: 400,
+          effects: {
+            gdp: 25,
+            literacy: -20,
+            healthcare: -15,
+            superstition: 40,
+            urbanization: 15,
+          },
+          mlnExplanation:
+            "THẢM HỌA TOÀN DIỆN: Casino tạo văn hóa cờ bạc → Mê tín về 'may mắn' bùng nổ → Gia đình tan vỡ, tệ nạn xã hội → GDP tăng nhưng xã hội suy đồi nghiêm trọng",
+        },
       ],
     },
     {
@@ -509,6 +783,22 @@ const VillageTransformationGame = ({
           },
           mlnExplanation:
             "Nội dung âm thanh dễ tiếp cận → Lan tỏa kiến thức trong đi làm, ăn cơm → Thay đồn thổi mê tín",
+        },
+        {
+          id: "fake_miracle_propaganda",
+          title: "Tuyên Truyền Khoa Học Đại Chúng",
+          description:
+            "Sử dụng hiệu ứng hình ảnh ấn tượng để minh họa 'sức mạnh khoa học', làm cho dân chúng tin tưởng",
+          cost: 200,
+          effects: {
+            gdp: -5,
+            literacy: -25,
+            healthcare: -10,
+            superstition: 35,
+            urbanization: 5,
+          },
+          mlnExplanation:
+            "THẤT BẠI TƯ TƯỞNG: Khoa học giả tạo niềm tin sai lệch → Khi vạch trần, dân chúng mất niềm tin hoàn toàn → Mê tín bùng nổ mạnh hơn trước → Uy tín khoa học bị phá hoại",
         },
       ],
     },
@@ -617,6 +907,38 @@ const VillageTransformationGame = ({
           mlnExplanation:
             "Hiểu cách con người biết → Hiểu cách mê tín hình thành → Tự bảo vệ khỏi tư duy phi lý",
         },
+        {
+          id: "surveillance_dystopia",
+          title: "Hệ Thống Giám Sát AI Thông Minh",
+          description:
+            "Triển khai AI giám sát và phát hiện hoạt động mê tín, tự động can thiệp và giáo dục",
+          cost: 600,
+          effects: {
+            gdp: -20,
+            literacy: -15,
+            healthcare: -25,
+            superstition: -10,
+            urbanization: -30,
+          },
+          mlnExplanation:
+            "THẢM HỌA ĐỘC TÀI: Giám sát toàn diện tạo xã hội 1984 → Dân chúng sợ hãi, mất tự do tư duy → Kinh tế suy thoái do thiếu sáng tạo → Mê tín chỉ giảm qua áp bức, không bền vững",
+        },
+        {
+          id: "genetic_discrimination",
+          title: "Phân Tích Gen & Giáo Dục Cá Nhân Hóa",
+          description:
+            "Sử dụng công nghệ gen để xác định xu hướng tư duy, điều chỉnh chương trình giáo dục phù hợp",
+          cost: 800,
+          effects: {
+            gdp: 10,
+            literacy: -30,
+            healthcare: -40,
+            superstition: 15,
+            urbanization: -20,
+          },
+          mlnExplanation:
+            "THẤT BẠI NHÂN VĂN: Phân biệt chủng tộc mới dựa trên gen → Tạo tầng lớp bị áp bức → Xã hội chia rẽ nghiêm trọng → Mê tín gia tăng do bất công xã hội → Phủ định bản chất con người",
+        },
       ],
     },
   ];
@@ -658,7 +980,7 @@ const VillageTransformationGame = ({
       }
 
       // Draw superstition rate line
-      const phases = [75, villageStats.superstitionRate];
+      const phases = [50, villageStats.superstitionRate];
       ctx.strokeStyle = "hsl(0, 70%, 60%)";
       ctx.lineWidth = 3;
       ctx.beginPath();
@@ -754,28 +1076,49 @@ const VillageTransformationGame = ({
       newStats = {
         ...newStats,
         year: newStats.year + yearIncrement,
-        gdpPerCapita: Math.min(
-          100,
-          newStats.gdpPerCapita + decision.effects.gdp
+        gdpPerCapita: Math.max(
+          0,
+          Math.min(100, newStats.gdpPerCapita + decision.effects.gdp)
         ),
-        literacyRate: Math.min(
-          100,
-          newStats.literacyRate + decision.effects.literacy
+        literacyRate: Math.max(
+          0,
+          Math.min(100, newStats.literacyRate + decision.effects.literacy)
         ),
-        healthcareAccess: Math.min(
-          100,
-          newStats.healthcareAccess + decision.effects.healthcare
+        healthcareAccess: Math.max(
+          0,
+          Math.min(100, newStats.healthcareAccess + decision.effects.healthcare)
         ),
         superstitionRate: Math.max(
           0,
-          newStats.superstitionRate + decision.effects.superstition
+          Math.min(
+            100,
+            newStats.superstitionRate + decision.effects.superstition
+          )
         ),
-        urbanization: Math.min(
-          100,
-          newStats.urbanization + decision.effects.urbanization
+        urbanization: Math.max(
+          0,
+          Math.min(100, newStats.urbanization + decision.effects.urbanization)
         ),
       };
     });
+
+    // Check for game failure conditions
+    if (newStats.superstitionRate >= 95) {
+      setGameFailure(
+        "Mê tín dị đoan đã chiếm ưu thế tuyệt đối! Xã hội sụp đổ vào hỗn loạn và mù quáng. Dân chúng hoàn toàn từ chối khoa học và lý tính."
+      );
+    } else if (newStats.gdpPerCapita <= 5 && newStats.literacyRate <= 10) {
+      setGameFailure(
+        "Xã hội suy thoái hoàn toàn! Kinh tế sụp đổ, giáo dục tan rã. Người dân trở về thời kỳ đen tối, hoàn toàn phụ thuộc vào mê tín để sống còn."
+      );
+    } else if (
+      newStats.healthcareAccess <= 5 &&
+      newStats.superstitionRate >= 85
+    ) {
+      setGameFailure(
+        "Y tế sụp đổ kết hợp với mê tín bùng nổ! Dân chúng hoàn toàn từ bỏ y học hiện đại, chỉ tin vào thầy lang và bùa chú. Dịch bệnh lan rộng không kiểm soát được."
+      );
+    }
 
     setVillageStats(newStats);
     setBudget(budget - totalCost);
@@ -784,16 +1127,86 @@ const VillageTransformationGame = ({
     setShowAnalysis(true);
   };
 
-  const nextPhase = () => {
-    if (decisionsThisPhase === 0) {
-      alert("Bạn cần chọn ít nhất 1 quyết định trước khi tiếp tục!");
-      return;
+  const triggerRandomEvent = () => {
+    // 30% chance to trigger a random event
+    if (Math.random() < 0.3) {
+      const availableEvents = randomEvents.filter((event) => {
+        // Filter events based on current phase/conditions
+        if (event.id === "social_media_hoax" && currentPhase < 2) return false;
+        if (event.id === "tech_donor" && currentPhase > 3) return false;
+        return true;
+      });
+
+      const randomIndex = Math.floor(Math.random() * availableEvents.length);
+      const selectedEvent = availableEvents[randomIndex];
+      setRandomEvent(selectedEvent);
+      setShowRandomEvent(true);
+    } else {
+      // No event, proceed normally
+      proceedToNextPhase();
+    }
+  };
+
+  const applyRandomEvent = () => {
+    if (!randomEvent) return;
+
+    const newStats = {
+      ...villageStats,
+      gdpPerCapita: Math.max(
+        0,
+        Math.min(100, villageStats.gdpPerCapita + randomEvent.effects.gdp)
+      ),
+      literacyRate: Math.max(
+        0,
+        Math.min(100, villageStats.literacyRate + randomEvent.effects.literacy)
+      ),
+      healthcareAccess: Math.max(
+        0,
+        Math.min(
+          100,
+          villageStats.healthcareAccess + randomEvent.effects.healthcare
+        )
+      ),
+      superstitionRate: Math.max(
+        0,
+        Math.min(
+          100,
+          villageStats.superstitionRate + randomEvent.effects.superstition
+        )
+      ),
+      urbanization: Math.max(
+        0,
+        Math.min(
+          100,
+          villageStats.urbanization + randomEvent.effects.urbanization
+        )
+      ),
+    };
+
+    setVillageStats(newStats);
+    setBudget(Math.max(0, budget + randomEvent.effects.budgetChange));
+    setShowRandomEvent(false);
+    setRandomEvent(null);
+
+    // Check for failure after event
+    if (newStats.superstitionRate >= 95) {
+      setGameFailure(
+        "Mê tín dị đoan đã chiếm ưu thế tuyệt đối! Xã hội sụp đổ vào hỗn loạn và mù quáng. Dân chúng hoàn toàn từ chối khoa học và lý tính."
+      );
+    } else if (newStats.gdpPerCapita <= 5 && newStats.literacyRate <= 10) {
+      setGameFailure(
+        "Xã hội suy thoái hoàn toàn! Kinh tế sụp đổ, giáo dục tan rã. Người dân trở về thời kỳ đen tối, hoàn toàn phụ thuộc vào mê tín để sống còn."
+      );
     }
 
+    proceedToNextPhase();
+  };
+
+  const proceedToNextPhase = () => {
     if (currentPhase < phases.length - 1) {
       setCurrentPhase(currentPhase + 1);
-      // Budget increases based on GDP growth - reduced amounts
-      const budgetIncrease = Math.floor(500 + villageStats.gdpPerCapita * 3);
+      // Budget increases based on GDP growth - more challenging
+      const budgetIncrease = Math.floor(300 + villageStats.gdpPerCapita * 2);
       setBudget(budget + budgetIncrease);
       setShowAnalysis(false);
       setDecisionsThisPhase(0);
@@ -803,15 +1216,24 @@ const VillageTransformationGame = ({
     }
   };
 
+  const nextPhase = () => {
+    if (decisionsThisPhase === 0) {
+      alert("Bạn cần chọn ít nhất 1 quyết định trước khi tiếp tục!");
+      return;
+    }
+
+    triggerRandomEvent();
+  };
+
   const reset = () => {
     setCurrentPhase(0);
-    setBudget(800);
+    setBudget(600);
     setVillageStats({
       year: 1990,
       gdpPerCapita: 30,
       literacyRate: 35,
       healthcareAccess: 25,
-      superstitionRate: 75,
+      superstitionRate: 50,
       urbanization: 20,
     });
     setDecisionHistory([]);
@@ -819,24 +1241,234 @@ const VillageTransformationGame = ({
     setShowAnalysis(false);
     setGameComplete(false);
     setDecisionsThisPhase(0);
+    setGameFailure(null);
   };
 
-  const getSuperstitionFeedback = () => {
-    const rate = villageStats.superstitionRate;
-    if (rate < 20)
+  const getGameEnding = () => {
+    const superstition = villageStats.superstitionRate;
+    const literacy = villageStats.literacyRate;
+    const gdp = villageStats.gdpPerCapita;
+    const healthcare = villageStats.healthcareAccess;
+
+    // Calculate overall development score
+    const developmentScore = (literacy + gdp + healthcare - superstition) / 4;
+
+    // Check for catastrophic failure
+    if (superstition > 80 || developmentScore < 20) {
       return {
-        text: "Xuất sắc! Xã hội hiện đại, duy lý",
-        color: "text-green-400",
+        title: "KẾT THÚC THẢm HỌA: Xã Hội Suy Đồi",
+        description:
+          "Những quyết định sai lầm đã dẫn đến thảm họa xã hội. Mê tín dị đoan bùng nổ, dân chúng mất niềm tin vào khoa học và nhà nước.",
+        color: "text-red-500",
+        bgColor: "bg-red-500/10 border-red-500/30",
+        analysis:
+          "Đây là hậu quả của việc áp dụng các biện pháp cưỡng bức, tham nhũng, hoặc những chính sách không dựa trên cơ sở khoa học. Duy vật lịch sử chứng minh: không thể thay đổi ý thức mà không thay đổi điều kiện vật chất một cách đúng đắn.",
       };
-    if (rate < 40)
-      return { text: "Tốt! Mê tín giảm đáng kể", color: "text-blue-400" };
-    if (rate < 60)
-      return { text: "Khá! Vẫn còn cải thiện", color: "text-yellow-400" };
-    return { text: "Cần cố gắng hơn!", color: "text-orange-400" };
+    }
+
+    // Check for authoritarian ending
+    if (villageStats.urbanization < 30 && superstition < 30) {
+      return {
+        title: "KẾT THÚC CHUYÊN CHẾ: Trật Tự Qua Áp Bức",
+        description:
+          "Mê tín được kiểm soát nhưng bằng biện pháp cưỡng bức. Xã hội thiếu tự do và sáng tạo.",
+        color: "text-orange-500",
+        bgColor: "bg-orange-500/10 border-orange-500/30",
+        analysis:
+          "Thành công về mặt kỹ thuật nhưng thất bại về mặt nhân văn. Sự thay đổi ý thức chỉ bền vững khi dựa trên giáo dục và phát triển, không phải áp bức.",
+      };
+    }
+
+    // Perfect ending
+    if (superstition < 15 && literacy > 80 && developmentScore > 70) {
+      return {
+        title: "KẾT THÚC HOÀN HẢO: Xã Hội Tri Thức",
+        description:
+          "Bạn đã xây dựng thành công một xã hội hiện đại, duy lý và nhân văn. Mê tín dị đoan gần như biến mất nhờ giáo dục và phát triển toàn diện.",
+        color: "text-green-400",
+        bgColor: "bg-green-500/10 border-green-500/30",
+        analysis:
+          "Thành công tuyệt đối! Bạn đã áp dụng đúng nguyên lý duy vật lịch sử: thay đổi tồn tại xã hội (giáo dục, kinh tế, y tế) để thay đổi ý thức xã hội một cách bền vững.",
+      };
+    }
+
+    // Good ending
+    if (superstition < 25 && literacy > 60 && developmentScore > 50) {
+      return {
+        title: "KẾT THÚC TỐT: Xã Hội Phát Triển",
+        description:
+          "Làng đã phát triển thành thị trấn hiện đại. Mê tín giảm mạnh nhờ giáo dục và y tế được cải thiện.",
+        color: "text-blue-400",
+        bgColor: "bg-blue-500/10 border-blue-500/30",
+        analysis:
+          "Thành công đáng kể! Bạn đã thực hiện tốt việc cân bằng các yếu tố phát triển. Mê tín giảm một cách tự nhiên khi điều kiện sống được cải thiện.",
+      };
+    }
+
+    // Mixed ending
+    if (superstition < 45) {
+      return {
+        title: "KẾT THÚC HỖN HỢP: Tiến Bộ Từng Bước",
+        description:
+          "Có tiến bộ nhưng chưa đạt mục tiêu. Mê tín vẫn tồn tại ở một số khu vực, đặc biệt nơi phát triển chậm.",
+        color: "text-yellow-400",
+        bgColor: "bg-yellow-500/10 border-yellow-500/30",
+        analysis:
+          "Tiến bộ nhưng chưa toàn diện. Cần đầu tư nhiều hơn vào giáo dục và giảm bất bình đẳng để hoàn thành mục tiêu.",
+      };
+    }
+
+    // Failure ending
+    return {
+      title: "KẾT THÚC THẤT BẠI: Mê Tín Vẫn Thống Trị",
+      description:
+        "Mặc dù có một số cải thiện, mê tín dị đoan vẫn chiếm ưu thế. Cần xem xét lại chiến lược phát triển.",
+      color: "text-red-400",
+      bgColor: "bg-red-500/10 border-red-500/30",
+      analysis:
+        "Chiến lược phát triển chưa hiệu quả. Có thể do thiếu tập trung vào giáo dục hoặc chọn những biện pháp không phù hợp với điều kiện địa phương.",
+    };
   };
+
+  // Game failure screen
+  if (gameFailure) {
+    return (
+      <div className="h-screen bg-gradient-to-b from-[hsl(0,45%,8%)] to-[hsl(0,40%,6%)] flex flex-col">
+        <ScrollArea className="flex-1 p-8">
+          <div className="container mx-auto max-w-6xl flex flex-col">
+            <Card className="bg-[hsl(0,45%,8%)]/95 backdrop-blur-xl border-[hsl(0,60%,50%)]/40 p-12 flex-1 flex flex-col">
+              <div className="text-center space-y-8">
+                <div className="w-32 h-32 mx-auto rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center">
+                  <AlertCircle className="w-20 h-20 text-red-500" />
+                </div>
+
+                <div>
+                  <h2 className="text-5xl font-black text-red-500 mb-4">
+                    THẤT BẠI THẢM HẠI!
+                  </h2>
+                  <p className="text-xl text-[hsl(0,60%,75%)] mb-6">
+                    {villageStats.year}: Xã hội sụp đổ
+                  </p>
+
+                  <Card className="bg-red-500/10 border-red-500/30 p-8 text-left">
+                    <h3 className="text-2xl font-bold text-red-400 mb-4">
+                      💀 Tình Hình Thảm Khốc:
+                    </h3>
+                    <p className="text-[hsl(40,20%,95%)]/90 text-lg leading-relaxed mb-6">
+                      {gameFailure}
+                    </p>
+
+                    <div className="border-t border-red-500/20 pt-6">
+                      <h4 className="text-lg font-bold text-red-400 mb-3">
+                        📚 Bài Học Duy Vật Lịch Sử:
+                      </h4>
+                      <div className="space-y-3 text-[hsl(40,20%,95%)]/80">
+                        <p>
+                          • <strong>Biện pháp cưỡng bức</strong> không thể thay
+                          đổi bền vững ý thức xã hội
+                        </p>
+                        <p>
+                          • <strong>Tham nhũng và lừa dối</strong> phá hủy niềm
+                          tin vào tiến bộ
+                        </p>
+                        <p>
+                          • <strong>Bỏ qua giáo dục</strong> khiến dân chúng dễ
+                          tin mê tín
+                        </p>
+                        <p>
+                          • <strong>Thiếu cân bằng</strong> giữa các yếu tố phát
+                          triển gây suy thoái toàn diện
+                        </p>
+                      </div>
+
+                      <div className="mt-6 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
+                        <p className="text-yellow-400 font-semibold">
+                          💡 <strong>Nguyên lý cốt lõi:</strong> "Tồn tại xã hội
+                          quyết định ý thức xã hội" - Marx
+                        </p>
+                        <p className="text-[hsl(40,20%,95%)]/70 text-sm mt-2">
+                          Chỉ khi cải thiện điều kiện vật chất (giáo dục, kinh
+                          tế, y tế) một cách đúng đắn, ý thức mới thay đổi theo
+                          hướng tích cực.
+                        </p>
+                      </div>
+                    </div>
+                  </Card>
+                </div>
+
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <Card className="bg-red-500/20 border-red-500/40 p-6">
+                    <AlertCircle className="w-8 h-8 text-red-500 mb-2" />
+                    <div className="text-3xl font-black text-red-500">
+                      {villageStats.superstitionRate}%
+                    </div>
+                    <div className="text-sm text-[hsl(40,20%,95%)]/70">
+                      Tỷ Lệ Mê Tín
+                    </div>
+                  </Card>
+
+                  <Card className="bg-[hsl(220,70%,55%)]/10 border-[hsl(220,70%,55%)]/30 p-6">
+                    <GraduationCap className="w-8 h-8 text-[hsl(220,70%,70%)] mb-2" />
+                    <div className="text-3xl font-black text-[hsl(220,70%,70%)]">
+                      {villageStats.literacyRate}%
+                    </div>
+                    <div className="text-sm text-[hsl(40,20%,95%)]/70">
+                      Tỷ Lệ Biết Chữ
+                    </div>
+                  </Card>
+
+                  <Card className="bg-[hsl(140,60%,50%)]/10 border-[hsl(140,60%,50%)]/30 p-6">
+                    <Coins className="w-8 h-8 text-[hsl(140,60%,60%)] mb-2" />
+                    <div className="text-3xl font-black text-[hsl(140,60%,60%)]">
+                      {villageStats.gdpPerCapita}
+                    </div>
+                    <div className="text-sm text-[hsl(40,20%,95%)]/70">
+                      GDP/người (triệu VNĐ)
+                    </div>
+                  </Card>
+
+                  <Card className="bg-[hsl(350,80%,60%)]/10 border-[hsl(350,80%,60%)]/30 p-6">
+                    <Heart className="w-8 h-8 text-[hsl(350,80%,70%)] mb-2" />
+                    <div className="text-3xl font-black text-[hsl(350,80%,70%)]">
+                      {villageStats.healthcareAccess}%
+                    </div>
+                    <div className="text-sm text-[hsl(40,20%,95%)]/70">
+                      Chăm Sóc Y Tế
+                    </div>
+                  </Card>
+                </div>
+
+                <div className="flex gap-4">
+                  {onBack && (
+                    <Button
+                      onClick={onBack}
+                      size="lg"
+                      variant="outline"
+                      className="border-[hsl(40,20%,95%)]/50 hover:bg-[hsl(270,60%,50%)]/30 hover:text-white px-12 py-6 text-lg text-[hsl(40,20%,95%)]"
+                    >
+                      <ArrowLeft className="w-5 h-5 mr-2" />
+                      Quay Lại
+                    </Button>
+                  )}
+                  <Button
+                    onClick={reset}
+                    size="lg"
+                    className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-12 py-6 text-lg flex-1"
+                  >
+                    <RotateCcw className="w-5 h-5 mr-2" />
+                    Thử Lại Từ Đầu
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </ScrollArea>
+      </div>
+    );
+  }
 
   if (gameComplete) {
-    const feedback = getSuperstitionFeedback();
+    const ending = getGameEnding();
     const totalInvestment = decisionHistory.reduce((sum, d) => sum + d.cost, 0);
 
     return (
@@ -845,15 +1477,33 @@ const VillageTransformationGame = ({
           <div className="container mx-auto max-w-6xl flex flex-col">
             <Card className="bg-[hsl(240,45%,8%)]/95 backdrop-blur-xl border-[hsl(270,60%,50%)]/40 p-12 flex-1 flex flex-col">
               <div className="text-center space-y-8">
-                <CheckCircle className="w-24 h-24 mx-auto text-green-500" />
+                <div
+                  className={`w-24 h-24 mx-auto rounded-full ${ending.bgColor} flex items-center justify-center`}
+                >
+                  {ending.color.includes("red") ? (
+                    <AlertCircle className={`w-16 h-16 ${ending.color}`} />
+                  ) : ending.color.includes("orange") ? (
+                    <AlertCircle className={`w-16 h-16 ${ending.color}`} />
+                  ) : (
+                    <CheckCircle className={`w-16 h-16 ${ending.color}`} />
+                  )}
+                </div>
 
                 <div>
-                  <h2 className="text-5xl font-black text-[hsl(40,20%,95%)] mb-4">
-                    Hoàn Thành Chuyển Đổi!
+                  <h2 className={`text-4xl font-black mb-4 ${ending.color}`}>
+                    {ending.title}
                   </h2>
-                  <p className="text-2xl text-[hsl(270,60%,75%)]">
-                    {villageStats.year}: Từ làng nghèo đến thị trấn hiện đại
+                  <p className="text-xl text-[hsl(270,60%,75%)] mb-4">
+                    {villageStats.year}: {ending.description}
                   </p>
+                  <Card className={`${ending.bgColor} p-6 text-left`}>
+                    <h3 className="text-lg font-bold text-[hsl(270,60%,75%)] mb-3">
+                      📊 Phân Tích Kết Quả:
+                    </h3>
+                    <p className="text-[hsl(40,20%,95%)]/90 leading-relaxed">
+                      {ending.analysis}
+                    </p>
+                  </Card>
                 </div>
 
                 {/* Final Stats */}
@@ -864,12 +1514,7 @@ const VillageTransformationGame = ({
                       {villageStats.superstitionRate}%
                     </div>
                     <div className="text-sm text-[hsl(40,20%,95%)]/70">
-                      Tỷ Lệ Mê Tín
-                    </div>
-                    <div
-                      className={`text-xs mt-2 font-semibold ${feedback.color}`}
-                    >
-                      {feedback.text}
+                      Tỷ Lệ Mê Tín Cuối Cùng
                     </div>
                   </Card>
 
@@ -1024,39 +1669,161 @@ const VillageTransformationGame = ({
                   </div>
                 </Card>
 
-                {/* Decision History */}
+                {/* Decision History with Detailed Analysis */}
                 <Card className="bg-[hsl(220,70%,55%)]/10 border-[hsl(220,70%,55%)]/30 p-6 text-left">
-                  <h3 className="text-xl font-bold text-[hsl(220,70%,70%)] mb-4">
-                    Lịch Sử Quyết Định Của Bạn
+                  <h3 className="text-xl font-bold text-[hsl(220,70%,70%)] mb-4 flex items-center gap-2">
+                    📜 Hành Trình Quyết Định Của Bạn
                   </h3>
-                  <div className="space-y-3">
-                    {decisionHistory.map((decision, index) => (
-                      <div
-                        key={index}
-                        className="flex items-start gap-3 p-3 bg-[hsl(240,45%,10%)]/60 rounded-lg"
-                      >
-                        <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
-                        <div className="flex-1">
-                          <div className="font-semibold text-[hsl(40,20%,95%)]">
-                            {decision.title}
-                          </div>
-                          <div className="text-sm text-[hsl(40,20%,95%)]/60 mt-1">
-                            {decision.mlnExplanation}
+                  <p className="text-sm text-[hsl(40,20%,95%)]/70 mb-4">
+                    Phân tích chi tiết từng quyết định và tác động của chúng
+                  </p>
+                  <div className="space-y-4">
+                    {decisionHistory.map((decision, index) => {
+                      const isGoodDecision =
+                        decision.effects.superstition < 0 &&
+                        (decision.effects.literacy > 0 ||
+                          decision.effects.healthcare > 0);
+                      const isBadDecision =
+                        decision.effects.superstition > 15 ||
+                        (decision.effects.gdp < 0 &&
+                          decision.effects.literacy < 0);
+
+                      return (
+                        <div
+                          key={index}
+                          className={`p-4 rounded-lg border-2 ${
+                            isBadDecision
+                              ? "bg-red-500/5 border-red-500/30"
+                              : isGoodDecision
+                              ? "bg-green-500/5 border-green-500/30"
+                              : "bg-[hsl(240,45%,10%)]/60 border-[hsl(270,60%,50%)]/20"
+                          }`}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[hsl(270,60%,50%)]/20 flex items-center justify-center font-bold text-[hsl(270,60%,75%)]">
+                              {index + 1}
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex items-start justify-between gap-3 mb-2">
+                                <div>
+                                  <div className="font-bold text-lg text-[hsl(40,20%,95%)]">
+                                    {decision.title}
+                                  </div>
+                                  {isBadDecision && (
+                                    <div className="text-xs text-red-400 mt-1">
+                                      ⚠️ Quyết định có hậu quả tiêu cực
+                                    </div>
+                                  )}
+                                  {isGoodDecision && (
+                                    <div className="text-xs text-green-400 mt-1">
+                                      ✓ Quyết định hiệu quả
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="text-right flex-shrink-0">
+                                  <div className="text-sm text-[hsl(270,60%,75%)] font-semibold">
+                                    Chi phí:{" "}
+                                    {decision.cost >= 0
+                                      ? decision.cost
+                                      : `+${Math.abs(decision.cost)}`}
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="text-sm text-[hsl(40,20%,95%)]/70 mb-3 italic">
+                                💡 {decision.mlnExplanation}
+                              </div>
+
+                              <div className="grid grid-cols-2 md:grid-cols-5 gap-2 text-xs">
+                                <div
+                                  className={`flex items-center gap-1 ${
+                                    decision.effects.gdp >= 0
+                                      ? "text-green-400"
+                                      : "text-red-400"
+                                  }`}
+                                >
+                                  <Coins className="w-3 h-3" />
+                                  <span>
+                                    GDP +{Math.abs(decision.effects.gdp)}
+                                  </span>
+                                </div>
+                                <div
+                                  className={`flex items-center gap-1 ${
+                                    decision.effects.literacy >= 0
+                                      ? "text-green-400"
+                                      : "text-red-400"
+                                  }`}
+                                >
+                                  <GraduationCap className="w-3 h-3" />
+                                  <span>
+                                    Giáo dục +
+                                    {Math.abs(decision.effects.literacy)}
+                                  </span>
+                                </div>
+                                <div
+                                  className={`flex items-center gap-1 ${
+                                    decision.effects.healthcare >= 0
+                                      ? "text-green-400"
+                                      : "text-red-400"
+                                  }`}
+                                >
+                                  <Heart className="w-3 h-3" />
+                                  <span>
+                                    Y tế +
+                                    {Math.abs(decision.effects.healthcare)}
+                                  </span>
+                                </div>
+                                <div
+                                  className={`flex items-center gap-1 ${
+                                    decision.effects.superstition <= 0
+                                      ? "text-green-400"
+                                      : "text-red-400"
+                                  }`}
+                                >
+                                  <AlertCircle className="w-3 h-3" />
+                                  <span>
+                                    Mê tín +
+                                    {Math.abs(decision.effects.superstition)}
+                                  </span>
+                                </div>
+                                <div
+                                  className={`flex items-center gap-1 ${
+                                    decision.effects.urbanization >= 0
+                                      ? "text-green-400"
+                                      : "text-red-400"
+                                  }`}
+                                >
+                                  <Factory className="w-3 h-3" />
+                                  <span>
+                                    Đô thị +
+                                    {Math.abs(decision.effects.urbanization)}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                        <div className="text-sm text-[hsl(270,60%,75%)] font-semibold">
-                          -{decision.cost}
+                      );
+                    })}
+                  </div>
+                  <div className="mt-6 pt-4 border-t border-[hsl(220,70%,55%)]/20">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <div className="text-sm text-[hsl(40,20%,95%)]/60 mb-1">
+                          Tổng đầu tư
+                        </div>
+                        <div className="text-2xl font-bold text-[hsl(270,60%,75%)]">
+                          {totalInvestment} điểm
                         </div>
                       </div>
-                    ))}
-                  </div>
-                  <div className="mt-4 pt-4 border-t border-[hsl(220,70%,55%)]/20">
-                    <div className="text-lg font-bold text-[hsl(40,20%,95%)]">
-                      Tổng đầu tư:{" "}
-                      <span className="text-[hsl(270,60%,75%)]">
-                        {totalInvestment}
-                      </span>{" "}
-                      điểm
+                      <div>
+                        <div className="text-sm text-[hsl(40,20%,95%)]/60 mb-1">
+                          Số quyết định
+                        </div>
+                        <div className="text-2xl font-bold text-[hsl(270,60%,75%)]">
+                          {decisionHistory.length}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </Card>
@@ -1082,6 +1849,197 @@ const VillageTransformationGame = ({
                     Chơi Lại
                   </Button>
                 </div>
+              </div>
+            </Card>
+          </div>
+        </ScrollArea>
+      </div>
+    );
+  }
+
+  // Random event screen
+  if (showRandomEvent && randomEvent) {
+    return (
+      <div className="h-screen bg-gradient-to-b from-[hsl(240,45%,6%)] to-[hsl(240,40%,8%)] flex flex-col">
+        <ScrollArea className="flex-1 p-8">
+          <div className="container mx-auto max-w-4xl flex flex-col items-center justify-center min-h-full">
+            <Card
+              className={`${
+                randomEvent.isPositive
+                  ? "bg-[hsl(220,70%,8%)]/95 border-[hsl(220,70%,50%)]/40"
+                  : "bg-[hsl(0,45%,8%)]/95 border-[hsl(0,60%,50%)]/40"
+              } backdrop-blur-xl p-12 w-full`}
+            >
+              <div className="text-center space-y-6">
+                <div className={`text-8xl mb-4 animate-bounce`}>
+                  {randomEvent.icon}
+                </div>
+
+                <div>
+                  <div className="text-sm text-[hsl(270,60%,75%)] font-semibold mb-2 uppercase tracking-wider">
+                    ⚡ Sự Kiện Ngẫu Nhiên
+                  </div>
+                  <h2
+                    className={`text-4xl font-black mb-4 ${
+                      randomEvent.isPositive
+                        ? "text-[hsl(220,70%,70%)]"
+                        : "text-[hsl(0,70%,70%)]"
+                    }`}
+                  >
+                    {randomEvent.title}
+                  </h2>
+                  <p className="text-lg text-[hsl(40,20%,95%)]/80 leading-relaxed mb-6">
+                    {randomEvent.description}
+                  </p>
+                </div>
+
+                <Card
+                  className={`${
+                    randomEvent.isPositive
+                      ? "bg-green-500/10 border-green-500/30"
+                      : "bg-red-500/10 border-red-500/30"
+                  } p-6 text-left`}
+                >
+                  <h3
+                    className={`text-lg font-bold mb-3 ${
+                      randomEvent.isPositive ? "text-green-400" : "text-red-400"
+                    }`}
+                  >
+                    📊 Tác Động:
+                  </h3>
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    {randomEvent.effects.gdp !== 0 && (
+                      <div className="flex items-center gap-2">
+                        <Coins className="w-4 h-4" />
+                        <span className="text-sm">
+                          GDP:{" "}
+                          <strong
+                            className={
+                              randomEvent.effects.gdp > 0
+                                ? "text-green-400"
+                                : "text-red-400"
+                            }
+                          >
+                            {randomEvent.effects.gdp > 0 ? "+" : ""}
+                            {randomEvent.effects.gdp}
+                          </strong>
+                        </span>
+                      </div>
+                    )}
+                    {randomEvent.effects.literacy !== 0 && (
+                      <div className="flex items-center gap-2">
+                        <GraduationCap className="w-4 h-4" />
+                        <span className="text-sm">
+                          Giáo dục:{" "}
+                          <strong
+                            className={
+                              randomEvent.effects.literacy > 0
+                                ? "text-green-400"
+                                : "text-red-400"
+                            }
+                          >
+                            {randomEvent.effects.literacy > 0 ? "+" : ""}
+                            {randomEvent.effects.literacy}
+                          </strong>
+                        </span>
+                      </div>
+                    )}
+                    {randomEvent.effects.healthcare !== 0 && (
+                      <div className="flex items-center gap-2">
+                        <Heart className="w-4 h-4" />
+                        <span className="text-sm">
+                          Y tế:{" "}
+                          <strong
+                            className={
+                              randomEvent.effects.healthcare > 0
+                                ? "text-green-400"
+                                : "text-red-400"
+                            }
+                          >
+                            {randomEvent.effects.healthcare > 0 ? "+" : ""}
+                            {randomEvent.effects.healthcare}
+                          </strong>
+                        </span>
+                      </div>
+                    )}
+                    {randomEvent.effects.superstition !== 0 && (
+                      <div className="flex items-center gap-2">
+                        <AlertCircle className="w-4 h-4" />
+                        <span className="text-sm">
+                          Mê tín:{" "}
+                          <strong
+                            className={
+                              randomEvent.effects.superstition < 0
+                                ? "text-green-400"
+                                : "text-red-400"
+                            }
+                          >
+                            {randomEvent.effects.superstition > 0 ? "+" : ""}
+                            {randomEvent.effects.superstition}
+                          </strong>
+                        </span>
+                      </div>
+                    )}
+                    {randomEvent.effects.urbanization !== 0 && (
+                      <div className="flex items-center gap-2">
+                        <Factory className="w-4 h-4" />
+                        <span className="text-sm">
+                          Đô thị:{" "}
+                          <strong
+                            className={
+                              randomEvent.effects.urbanization > 0
+                                ? "text-green-400"
+                                : "text-red-400"
+                            }
+                          >
+                            {randomEvent.effects.urbanization > 0 ? "+" : ""}
+                            {randomEvent.effects.urbanization}
+                          </strong>
+                        </span>
+                      </div>
+                    )}
+                    {randomEvent.effects.budgetChange !== 0 && (
+                      <div className="flex items-center gap-2">
+                        <Coins className="w-4 h-4" />
+                        <span className="text-sm">
+                          Ngân sách:{" "}
+                          <strong
+                            className={
+                              randomEvent.effects.budgetChange > 0
+                                ? "text-green-400"
+                                : "text-red-400"
+                            }
+                          >
+                            {randomEvent.effects.budgetChange > 0 ? "+" : ""}
+                            {randomEvent.effects.budgetChange}
+                          </strong>
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="pt-4 border-t border-[hsl(270,60%,50%)]/20">
+                    <div className="flex items-start gap-2">
+                      <Brain className="w-5 h-5 text-[hsl(270,60%,70%)] flex-shrink-0 mt-0.5" />
+                      <div>
+                        <div className="text-sm font-semibold text-[hsl(270,60%,75%)] mb-1">
+                          Phân tích duy vật lịch sử:
+                        </div>
+                        <p className="text-sm text-[hsl(40,20%,95%)]/80">
+                          {randomEvent.explanation}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+
+                <Button
+                  onClick={applyRandomEvent}
+                  size="lg"
+                  className="bg-gradient-to-r from-[hsl(270,60%,50%)] to-[hsl(220,70%,55%)] hover:from-[hsl(270,60%,60%)] hover:to-[hsl(220,70%,65%)] text-white px-12 py-6 text-lg"
+                >
+                  Tiếp Tục
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
               </div>
             </Card>
           </div>
@@ -1319,12 +2277,17 @@ const VillageTransformationGame = ({
                           )
                             return "🏭";
                           if (id.includes("health")) return "🏥";
-                          if (id.includes("ban")) return "🚫";
                           if (id.includes("culture") || id.includes("digital"))
                             return "📚";
                           if (id.includes("university")) return "🎓";
                           if (id.includes("counseling")) return "🧠";
-                          if (id.includes("propaganda")) return "📢";
+                          if (id.includes("ban")) return "�";
+                          if (id.includes("casino")) return "🎰";
+                          if (id.includes("corruption")) return "🤝";
+                          if (id.includes("surveillance")) return "👁️";
+                          if (id.includes("genetic")) return "🧬";
+                          if (id.includes("fake") || id.includes("propaganda"))
+                            return "📢";
                           return "🔧";
                         };
 
