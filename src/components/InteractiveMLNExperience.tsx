@@ -61,8 +61,8 @@ const InteractiveMLNExperience = () => {
               </div>
 
               <p className="text-sm sm:text-base text-[hsl(40,20%,95%)]/80 mb-4 sm:mb-6 leading-relaxed">
-                Trải nghiệm <strong>timeline tương tác</strong> qua 30 năm lịch
-                sử Việt Nam. Đưa ra 4-5 quyết định quan trọng và xem kết quả
+                Trải nghiệm <strong>timeline tương tác</strong> qua 35 năm lịch
+                sử Việt Nam. Đưa ra 9 quyết định quan trọng và xem kết quả
                 ngay lập tức.
               </p>
 
@@ -143,7 +143,7 @@ const InteractiveMLNExperience = () => {
               </div>
 
               <p className="text-sm sm:text-base text-[hsl(40,20%,95%)]/80 mb-4 sm:mb-6 leading-relaxed">
-                Trải nghiệm <strong>game mô phỏng xã hội</strong> qua 3 giai
+                Trải nghiệm <strong>game mô phỏng xã hội</strong> qua 5 giai
                 đoạn lịch sử. Quản lý ngân sách, đầu tư chiến lược và xem phân
                 tích chi tiết.
               </p>
