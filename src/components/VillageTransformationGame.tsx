@@ -1253,80 +1253,263 @@ const VillageTransformationGame = ({
     // Calculate overall development score
     const developmentScore = (literacy + gdp + healthcare - superstition) / 4;
 
+    // Analyze player's decision patterns
+    const analyzeDecisions = () => {
+      const educationDecisions = decisionHistory.filter(
+        (d) =>
+          d.id.includes("edu") ||
+          d.id.includes("literacy") ||
+          d.id.includes("university") ||
+          d.id.includes("digital_literacy") ||
+          d.id.includes("ai_education") ||
+          d.id.includes("critical_thinking") ||
+          d.id.includes("philosophy_education")
+      );
+
+      const economicDecisions = decisionHistory.filter(
+        (d) =>
+          d.id.includes("econ") ||
+          d.id.includes("industry") ||
+          d.id.includes("tech") ||
+          d.id.includes("fintech") ||
+          d.id.includes("smart_city") ||
+          d.id.includes("biotech")
+      );
+
+      const healthDecisions = decisionHistory.filter(
+        (d) =>
+          d.id.includes("health") ||
+          d.id.includes("hospital") ||
+          d.id.includes("counseling") ||
+          d.id.includes("wellness") ||
+          d.id.includes("biotech")
+      );
+
+      const authoritarianDecisions = decisionHistory.filter(
+        (d) =>
+          d.id.includes("ban_superstition") ||
+          d.id.includes("surveillance") ||
+          d.id.includes("genetic_discrimination")
+      );
+
+      const corruptDecisions = decisionHistory.filter(
+        (d) =>
+          d.id.includes("corruption") ||
+          d.id.includes("casino") ||
+          d.id.includes("fake_miracle")
+      );
+
+      const culturalDecisions = decisionHistory.filter(
+        (d) =>
+          d.id.includes("culture") ||
+          d.id.includes("museum") ||
+          d.id.includes("podcast") ||
+          d.id.includes("social_media") ||
+          d.id.includes("radio")
+      );
+
+      return {
+        educationDecisions,
+        economicDecisions,
+        healthDecisions,
+        authoritarianDecisions,
+        corruptDecisions,
+        culturalDecisions,
+        totalDecisions: decisionHistory.length,
+      };
+    };
+
+    const decisionAnalysis = analyzeDecisions();
+
     // Check for catastrophic failure
     if (superstition > 80 || developmentScore < 20) {
+      let analysis = "Đây là hậu quả của việc áp dụng các biện pháp ";
+
+      if (decisionAnalysis.corruptDecisions.length > 0) {
+        analysis += `tham nhũng như ${decisionAnalysis.corruptDecisions
+          .map((d) => d.title)
+          .join(", ")}, `;
+      }
+      if (decisionAnalysis.authoritarianDecisions.length > 0) {
+        analysis += `cưỡng bức như ${decisionAnalysis.authoritarianDecisions
+          .map((d) => d.title)
+          .join(", ")}, `;
+      }
+      if (
+        decisionAnalysis.economicDecisions.length === 0 &&
+        decisionAnalysis.educationDecisions.length === 0
+      ) {
+        analysis += "thiếu đầu tư vào kinh tế và giáo dục, ";
+      }
+
+      analysis +=
+        "hoặc những chính sách không dựa trên cơ sở khoa học. Duy vật lịch sử chứng minh: không thể thay đổi ý thức mà không thay đổi điều kiện vật chất một cách đúng đắn.";
+
       return {
         title: "KẾT THÚC THẢm HỌA: Xã Hội Suy Đồi",
         description:
           "Những quyết định sai lầm đã dẫn đến thảm họa xã hội. Mê tín dị đoan bùng nổ, dân chúng mất niềm tin vào khoa học và nhà nước.",
         color: "text-red-500",
         bgColor: "bg-red-500/10 border-red-500/30",
-        analysis:
-          "Đây là hậu quả của việc áp dụng các biện pháp cưỡng bức, tham nhũng, hoặc những chính sách không dựa trên cơ sở khoa học. Duy vật lịch sử chứng minh: không thể thay đổi ý thức mà không thay đổi điều kiện vật chất một cách đúng đắn.",
+        analysis: analysis,
       };
     }
 
     // Check for authoritarian ending
     if (villageStats.urbanization < 30 && superstition < 30) {
+      let analysis =
+        "Thành công về mặt kỹ thuật nhưng thất bại về mặt nhân văn. ";
+
+      if (decisionAnalysis.authoritarianDecisions.length > 0) {
+        analysis += `Bạn đã chọn biện pháp cưỡng bức như ${decisionAnalysis.authoritarianDecisions
+          .map((d) => d.title)
+          .join(", ")}, `;
+      }
+      if (decisionAnalysis.educationDecisions.length === 0) {
+        analysis += "thiếu đầu tư vào giáo dục để phát triển tư duy tự do, ";
+      }
+
+      analysis +=
+        "Sự thay đổi ý thức chỉ bền vững khi dựa trên giáo dục và phát triển, không phải áp bức.";
+
       return {
         title: "KẾT THÚC CHUYÊN CHẾ: Trật Tự Qua Áp Bức",
         description:
           "Mê tín được kiểm soát nhưng bằng biện pháp cưỡng bức. Xã hội thiếu tự do và sáng tạo.",
         color: "text-orange-500",
         bgColor: "bg-orange-500/10 border-orange-500/30",
-        analysis:
-          "Thành công về mặt kỹ thuật nhưng thất bại về mặt nhân văn. Sự thay đổi ý thức chỉ bền vững khi dựa trên giáo dục và phát triển, không phải áp bức.",
+        analysis: analysis,
       };
     }
 
     // Perfect ending
     if (superstition < 15 && literacy > 80 && developmentScore > 70) {
+      let analysis = "Thành công tuyệt đối! ";
+
+      if (decisionAnalysis.educationDecisions.length > 0) {
+        analysis += `Bạn đã đầu tư mạnh vào giáo dục với ${decisionAnalysis.educationDecisions
+          .map((d) => d.title)
+          .join(", ")}, `;
+      }
+      if (decisionAnalysis.economicDecisions.length > 0) {
+        analysis += `kết hợp với phát triển kinh tế qua ${decisionAnalysis.economicDecisions
+          .map((d) => d.title)
+          .join(", ")}, `;
+      }
+      if (decisionAnalysis.healthDecisions.length > 0) {
+        analysis += `và chăm sóc sức khỏe bằng ${decisionAnalysis.healthDecisions
+          .map((d) => d.title)
+          .join(", ")}. `;
+      }
+
+      analysis +=
+        "Bạn đã áp dụng đúng nguyên lý duy vật lịch sử: thay đổi tồn tại xã hội (giáo dục, kinh tế, y tế) để thay đổi ý thức xã hội một cách bền vững.";
+
       return {
         title: "KẾT THÚC HOÀN HẢO: Xã Hội Tri Thức",
         description:
           "Bạn đã xây dựng thành công một xã hội hiện đại, duy lý và nhân văn. Mê tín dị đoan gần như biến mất nhờ giáo dục và phát triển toàn diện.",
         color: "text-green-400",
         bgColor: "bg-green-500/10 border-green-500/30",
-        analysis:
-          "Thành công tuyệt đối! Bạn đã áp dụng đúng nguyên lý duy vật lịch sử: thay đổi tồn tại xã hội (giáo dục, kinh tế, y tế) để thay đổi ý thức xã hội một cách bền vững.",
+        analysis: analysis,
       };
     }
 
     // Good ending
     if (superstition < 25 && literacy > 60 && developmentScore > 50) {
+      let analysis = "Thành công đáng kể! ";
+
+      if (
+        decisionAnalysis.educationDecisions.length > 0 &&
+        decisionAnalysis.economicDecisions.length > 0
+      ) {
+        analysis += `Bạn đã cân bằng tốt giữa giáo dục (${decisionAnalysis.educationDecisions
+          .map((d) => d.title)
+          .join(
+            ", "
+          )}) và phát triển kinh tế (${decisionAnalysis.economicDecisions
+          .map((d) => d.title)
+          .join(", ")}). `;
+      } else if (
+        decisionAnalysis.educationDecisions.length >
+        decisionAnalysis.economicDecisions.length
+      ) {
+        analysis += `Bạn tập trung vào giáo dục với ${decisionAnalysis.educationDecisions
+          .map((d) => d.title)
+          .join(", ")}, mang lại kết quả bền vững. `;
+      } else {
+        analysis += `Bạn ưu tiên phát triển kinh tế với ${decisionAnalysis.economicDecisions
+          .map((d) => d.title)
+          .join(", ")}, tạo nền tảng cho sự thay đổi. `;
+      }
+
+      analysis +=
+        "Mê tín giảm một cách tự nhiên khi điều kiện sống được cải thiện.";
+
       return {
         title: "KẾT THÚC TỐT: Xã Hội Phát Triển",
         description:
           "Làng đã phát triển thành thị trấn hiện đại. Mê tín giảm mạnh nhờ giáo dục và y tế được cải thiện.",
         color: "text-blue-400",
         bgColor: "bg-blue-500/10 border-blue-500/30",
-        analysis:
-          "Thành công đáng kể! Bạn đã thực hiện tốt việc cân bằng các yếu tố phát triển. Mê tín giảm một cách tự nhiên khi điều kiện sống được cải thiện.",
+        analysis: analysis,
       };
     }
 
     // Mixed ending
     if (superstition < 45) {
+      let analysis = "Tiến bộ nhưng chưa toàn diện. ";
+
+      if (decisionAnalysis.educationDecisions.length === 0) {
+        analysis += "Bạn thiếu đầu tư vào giáo dục, ";
+      }
+      if (decisionAnalysis.economicDecisions.length === 0) {
+        analysis += "thiếu phát triển kinh tế đồng đều, ";
+      }
+      if (decisionAnalysis.healthDecisions.length === 0) {
+        analysis += "chăm sóc sức khỏe chưa đầy đủ, ";
+      }
+
+      analysis +=
+        "Cần đầu tư nhiều hơn vào giáo dục và giảm bất bình đẳng để hoàn thành mục tiêu.";
+
       return {
         title: "KẾT THÚC HỖN HỢP: Tiến Bộ Từng Bước",
         description:
           "Có tiến bộ nhưng chưa đạt mục tiêu. Mê tín vẫn tồn tại ở một số khu vực, đặc biệt nơi phát triển chậm.",
         color: "text-yellow-400",
         bgColor: "bg-yellow-500/10 border-yellow-500/30",
-        analysis:
-          "Tiến bộ nhưng chưa toàn diện. Cần đầu tư nhiều hơn vào giáo dục và giảm bất bình đẳng để hoàn thành mục tiêu.",
+        analysis: analysis,
       };
     }
 
     // Failure ending
+    let analysis = "Chiến lược phát triển chưa hiệu quả. ";
+
+    if (decisionAnalysis.educationDecisions.length === 0) {
+      analysis +=
+        "Thiếu tập trung vào giáo dục khiến dân chúng không có công cụ để chống lại mê tín. ";
+    }
+    if (decisionAnalysis.economicDecisions.length === 0) {
+      analysis +=
+        "Không phát triển kinh tế khiến điều kiện sống không cải thiện. ";
+    }
+    if (decisionAnalysis.corruptDecisions.length > 0) {
+      analysis += `Các quyết định như ${decisionAnalysis.corruptDecisions
+        .map((d) => d.title)
+        .join(", ")} đã làm suy yếu niềm tin vào chính quyền. `;
+    }
+
+    analysis +=
+      "Có thể do thiếu tập trung vào giáo dục hoặc chọn những biện pháp không phù hợp với điều kiện địa phương.";
+
     return {
       title: "KẾT THÚC THẤT BẠI: Mê Tín Vẫn Thống Trị",
       description:
         "Mặc dù có một số cải thiện, mê tín dị đoan vẫn chiếm ưu thế. Cần xem xét lại chiến lược phát triển.",
       color: "text-red-400",
       bgColor: "bg-red-500/10 border-red-500/30",
-      analysis:
-        "Chiến lược phát triển chưa hiệu quả. Có thể do thiếu tập trung vào giáo dục hoặc chọn những biện pháp không phù hợp với điều kiện địa phương.",
+      analysis: analysis,
     };
   };
 
