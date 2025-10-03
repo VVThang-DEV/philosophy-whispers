@@ -14,8 +14,7 @@ An interactive web application that brings philosophical discussions to life thr
 
 ## Project Info
 
-**Repository**: [philosophy-whispers](https://github.com/VVThang-DEV/philosophy-whispers)  
-**Live Demo**: [View on Lovable](https://lovable.dev/projects/7d47076d-62fc-439b-9809-860c71d14240)
+**Repository**: [philosophy-whispers](https://github.com/VVThang-DEV/philosophy-whispers)
 
 ## Technologies Used
 
@@ -63,8 +62,6 @@ This project is built with:
 
 You can edit this code in several ways:
 
-- **Use Lovable**: Visit the [Lovable Project](https://lovable.dev/projects/7d47076d-62fc-439b-9809-860c71d14240) and start prompting. Changes are committed automatically.
-
 - **Local IDE**: Clone the repo, make changes, and push. Ensure you have Node.js installed.
 
 - **GitHub Editor**: Edit files directly in GitHub and commit changes.
@@ -73,11 +70,21 @@ You can edit this code in several ways:
 
 ## Deployment
 
-Deploy easily via [Lovable](https://lovable.dev/projects/7d47076d-62fc-439b-9809-860c71d14240) by clicking Share → Publish.
+This project can be deployed to platforms like Vercel, Netlify, or any static hosting service.
 
-## Custom Domain
+For Vercel deployment:
 
-Connect a custom domain in Project Settings > Domains. Learn more: [Custom Domain Setup](https://docs.lovable.dev/features/custom-domain#custom-domain)
+1. Connect your GitHub repository to Vercel.
+2. Vercel will automatically detect the Vite configuration and deploy.
+
+For manual deployment:
+
+1. Build the project:
+   ```sh
+   npm run build
+   ```
+
+2. Deploy the `dist` folder to your hosting provider.
 
 ## Contributing
 
