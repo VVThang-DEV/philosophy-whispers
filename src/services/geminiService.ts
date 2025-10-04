@@ -24,7 +24,7 @@ export class PhilosopherChatService {
       systemInstruction:
         "Think deeply as a philosopher, but keep your response concise and focused. Quality over quantity.",
       generationConfig: {
-        maxOutputTokens: 2000, // Đủ cho thinking (600-800) + output (800-1200)
+        maxOutputTokens: 2500, // Giảm xuống để đảm bảo tính ngắn gọn
       },
     });
     this.initializeChat();
@@ -129,8 +129,8 @@ NHIỆM VỤ:
       this.philosopher.name
     }
 8. Giữ câu trả lời CÂN BẰNG giữa sâu sắc và ngắn gọn:
-   - 3-4 đoạn văn súc tích (mỗi đoạn 2-4 câu)
-   - Tổng cộng 200-300 từ
+   - 2-3 đoạn văn súc tích (mỗi đoạn 2-3 câu)
+   - Tổng cộng 150-200 từ
    - Đi thẳng vào trọng tâm, KHÔNG lan man
    - KHÔNG liệt kê dài dòng, chỉ nêu điểm chính
    - Tránh "info dump" - chọn lọc thông tin quan trọng nhất
@@ -289,7 +289,7 @@ export async function generateDebateResponse(
     const model = genAI.getGenerativeModel({
       model: "gemini-2.5-flash",
       generationConfig: {
-        maxOutputTokens: 2000, // Giới hạn 2000 tokens cho debate mode
+        maxOutputTokens: 4000, // Tăng lên để có nhiều token hơn cho debate mode
       },
     });
 
