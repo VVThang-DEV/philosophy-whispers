@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import type { Philosopher } from "../data/philosophers";
 
-const API_KEY = "AIzaSyCY580CRPTUT7CRchoONt9k6DF8eK2a3g4";
+const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(API_KEY);
 
 export interface ChatMessage {
